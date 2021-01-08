@@ -163,3 +163,31 @@ if ( ! function_exists( 'wp_body_open' ) ) :
 		do_action( 'wp_body_open' );
 	}
 endif;
+
+if ( ! function_exists( 'trw_get_media' ) ) :
+	/**
+	 * Returns media for any given post
+	 */
+	function trw_get_media( $id ) {
+
+		if ( !$id ) {
+			return false;
+		}
+
+		// get repeater field of media
+
+		return;
+	}
+endif;
+
+if ( ! function_exists( 'trw_show_media' ) ) :
+	/**
+	 * Returns gallery of media for any given post
+	 */
+	function trw_show_media( $id, $size = 'full', $count = 'all' ) {
+		echo $count;
+	}
+endif;
+
+
+

@@ -35,3 +35,12 @@ function trw_pingback_header() {
 	}
 }
 add_action( 'wp_head', 'trw_pingback_header' );
+
+/**
+ * Allow SVG uploads via media uploader
+ */
+function trw_upload_files( $allowed ) {
+  $allowed['svg'] = 'image/svg+xml';
+  return $allowed;
+}
+add_filter( 'upload_mimes', 'trw_upload_files');

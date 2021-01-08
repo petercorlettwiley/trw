@@ -17,20 +17,16 @@
 		else :
 			the_title( '<h2 class="entry-title"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h2>' );
 		endif;
-
-		if ( 'post' === get_post_type() ) :
-			?>
-			<div class="entry-meta">
-				<?php
-				trw_posted_on();
-				trw_posted_by();
-				?>
-			</div><!-- .entry-meta -->
-		<?php endif; ?>
+		?>
 	</header><!-- .entry-header -->
 
-	<?php trw_post_thumbnail(); ?>
+	<?php
+	if ( !is_singular() ) {
+		trw_post_thumbnail();
+	}
+	?>
 
+	<?php if ( is_singular() ) : ?>
 	<div class="entry-content">
 		<?php
 		the_content(
@@ -47,17 +43,14 @@
 				wp_kses_post( get_the_title() )
 			)
 		);
-
-		wp_link_pages(
-			array(
-				'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'trw' ),
-				'after'  => '</div>',
-			)
-		);
 		?>
 	</div><!-- .entry-content -->
 
-	<footer class="entry-footer">
-		<?php trw_entry_footer(); ?>
-	</footer><!-- .entry-footer -->
+	<div class="entry-media">
+
+		<?php trw_show_media( get_the_ID(), 'full', 'all' ); ?>
+		
+	</div>
+	<?php endif; ?>
+
 </article><!-- #post-<?php the_ID(); ?> -->
