@@ -1,0 +1,44 @@
+$size__unit-header-offset-vertical: 1rem;
+$size__unit-header-offset-horizontal: $size__unit-horizontal;
+$size__unit-header-offset-vertical-full: 1.5rem;
+$size__unit-header-offset-horizontal-full: $size__unit-horizontal-full;
+
+#masthead {
+
+	.site-branding {
+		position: absolute;
+		top: $size__unit-header-offset-vertical;
+		left: $size__unit-header-offset-horizontal;
+	}
+
+	.main-navigation {
+		position: fixed;
+		top: $size__unit-header-offset-vertical;
+		right: $size__unit-header-offset-horizontal;
+
+		ul {
+			list-style: none;
+			margin: 0;
+			padding-left: 0;
+		}
+	}
+}
+
+
+
+@media screen and (min-width: $breakpoint__mobile) {
+	#masthead {
+	
+		.site-branding {
+			position: fixed;
+			top: $size__unit-header-offset-vertical-full;
+			left: $size__unit-header-offset-horizontal-full;
+		}
+
+		.main-navigation {
+			top: $size__unit-header-offset-vertical-full;
+			right: $size__unit-header-offset-horizontal-full;
+		}
+
+	}
+}

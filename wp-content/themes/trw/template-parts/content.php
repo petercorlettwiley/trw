@@ -10,23 +10,24 @@
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<header class="entry-header">
+
+	<?php if ( !is_singular() ) : // archive and home view ?>
+
+		<a class="post-link-wrap" href="<?php echo esc_url( get_permalink() ); ?>" rel="bookmark">
+
 		<?php
-		if ( is_singular() ) :
-			the_title( '<h1 class="entry-title">', '</h1>' );
-		else :
-			the_title( '<h2 class="entry-title"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h2>' );
-		endif;
+		the_title( '<div class="rotate-90"><h2 class="entry-title">', '</h2></div>' );
+		trw_post_thumbnail();
 		?>
+
+		</a>
+
+	<?php else : // single post view ?>
+
+	<header class="entry-header">
+		<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
 	</header><!-- .entry-header -->
 
-	<?php
-	if ( !is_singular() ) {
-		trw_post_thumbnail();
-	}
-	?>
-
-	<?php if ( is_singular() ) : ?>
 	<div class="entry-content">
 		<?php
 		the_content(
@@ -51,6 +52,7 @@
 		<?php trw_show_media( get_the_ID(), 'full', 'all' ); ?>
 		
 	</div>
+
 	<?php endif; ?>
 
 </article><!-- #post-<?php the_ID(); ?> -->
