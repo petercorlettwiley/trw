@@ -1,4 +1,4 @@
-$size__vertical-padding-scale: 5;
+$size__vertical-padding-scale: 2;
 $size__vertical-padding-scale-full: 2;
 
 .home {
@@ -28,10 +28,26 @@ $size__vertical-padding-scale-full: 2;
 
         h2 {
           font-size: 1rem;
+          font-weight: 400;
+          color: $color__black;
+          letter-spacing: $font__letter-spacing-loose;
         }
 
         .post-thumbnail {
           align-self: flex-end;
+          display: flex;
+          overflow: hidden;
+
+          img {
+            transform-origin: center;
+            transition: $transition__standard;
+          }
+        }
+
+        &:hover {
+          .post-thumbnail img {
+            transform: scale(1.125);
+          }
         }
       }
     }
@@ -58,6 +74,16 @@ $size__vertical-padding-scale-full: 2;
           //padding: $size__unit-image-padding;
         }
       }
+    }
+
+    #footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: $size__unit-vertical-full;
+      background-color: $color__white;
+      z-index: 9;
     }
   }
 }

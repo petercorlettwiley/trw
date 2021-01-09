@@ -615,7 +615,7 @@ textarea {
 # Layouts
 --------------------------------------------------------------*/
 .home #primary {
-  padding: 5rem 1.5rem 1rem;
+  padding: 2rem 1.5rem 1rem;
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
@@ -639,12 +639,24 @@ textarea {
 }
 .home #primary article .post-link-wrap h2 {
   font-size: 1rem;
+  font-weight: 400;
+  color: #000;
+  letter-spacing: 0.05em;
 }
 .home #primary article .post-link-wrap .post-thumbnail {
   align-self: flex-end;
+  display: flex;
+  overflow: hidden;
+}
+.home #primary article .post-link-wrap .post-thumbnail img {
+  transform-origin: center;
+  transition: all 0.3s;
+}
+.home #primary article .post-link-wrap:hover .post-thumbnail img {
+  transform: scale(1.125);
 }
 
-@media screen and (min-width: 783px) {
+@media screen and (min-width: 800px) {
   .home #primary {
     padding: 6rem 5rem 3rem;
     flex-direction: row;
@@ -657,16 +669,23 @@ textarea {
   .home #primary article {
     width: calc(33% - 1.3333333333rem);
   }
+  .home #footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3rem;
+    background-color: #fff;
+    z-index: 9;
+  }
 }
 /*--------------------------------------------------------------
 # Components
 --------------------------------------------------------------*/
 /* Navigation and header
 --------------------------------------------- */
-#masthead .site-branding {
-  position: absolute;
-  top: 1rem;
-  left: 1.5rem;
+#masthead {
+  margin: 1rem 1.5rem 0;
 }
 #masthead .main-navigation {
   position: fixed;
@@ -678,16 +697,29 @@ textarea {
   margin: 0;
   padding-left: 0;
 }
+#masthead .main-navigation ul li a {
+  font-size: 1.5rem;
+  line-height: 1;
+  font-weight: 500;
+  color: #000;
+  text-decoration: none;
+}
 
-@media screen and (min-width: 783px) {
-  #masthead .site-branding {
+@media screen and (min-width: 800px) {
+  #masthead {
+    margin: 0;
     position: fixed;
-    top: 1.5rem;
-    left: 4rem;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    right: 0;
+    padding: 1.5rem 4rem;
+    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
   }
   #masthead .main-navigation {
-    top: 1.5rem;
-    right: 4rem;
+    position: static;
   }
 }
 /* Posts and pages

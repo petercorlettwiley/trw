@@ -11,7 +11,12 @@
 
 ?>
 
-	<!-- colophon? -->
+  <footer id="footer">
+    <div class="color-buttons">
+      <div class="black"></div>
+      <div class="white"></div>
+    </div>
+  </footer>
 	
 </div><!-- #page -->
 
