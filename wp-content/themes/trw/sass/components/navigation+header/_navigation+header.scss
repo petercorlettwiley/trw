@@ -7,6 +7,9 @@ $size__unit-header-offset-horizontal-full: $size__unit-horizontal-full;
 	margin: $size__unit-header-offset-vertical $size__unit-header-offset-horizontal 0;
 
 	.site-branding {
+		a:after {
+			display: none;
+		}
 	}
 
 	.main-navigation {
@@ -23,10 +26,39 @@ $size__unit-header-offset-horizontal-full: $size__unit-horizontal-full;
 
 				a {
 					font-size: 1.5rem;
-					line-height: 1;
+					line-height: 1.2;
 					font-weight: 500;
 					color: $color__black;
 					text-decoration: none;
+					position: relative;
+					z-index: 10;
+					display: block;
+					text-align: center;
+					width: 1.25em;
+					height: 1.25em;
+					border: 1px solid transparent;
+					border-radius: 50%;
+					overflow: hidden;
+					transition: $transition__standard;
+
+					&:after {
+						left: 0;
+						right: 0;
+						bottom: 0;
+						top: 100%;
+						opacity: 0;
+						height: auto;
+						z-index: -1;
+					}
+
+					&:hover {
+						color: $color__white;
+					}
+
+					&:hover:after {
+						top: 0;
+						opacity: 1;
+					}
 				}
 			}
 		}

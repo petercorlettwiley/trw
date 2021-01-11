@@ -17,6 +17,10 @@ $size__vertical-padding-scale-full: 2;
         display: flex;
         padding: 0 $size__unit-image-padding*1.25 $size__unit-image-padding;
 
+        &:after {
+          display: none;
+        }
+
         .rotate-90 h2 {
           transform: rotate(-90deg);
           position: absolute;
@@ -31,6 +35,8 @@ $size__vertical-padding-scale-full: 2;
           font-weight: 400;
           color: $color__black;
           letter-spacing: $font__letter-spacing-loose;
+
+          @extend .underline-reverse;
         }
 
         .post-thumbnail {
@@ -40,13 +46,18 @@ $size__vertical-padding-scale-full: 2;
 
           img {
             transform-origin: center;
-            transition: $transition__standard;
+            transition: $transition__slow;
           }
         }
 
         &:hover {
           .post-thumbnail img {
-            transform: scale(1.125);
+            transform: scale(1.1);
+          }
+
+          h2:after {
+            right: 0;
+            opacity: 1;
           }
         }
       }

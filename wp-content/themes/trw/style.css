@@ -387,7 +387,7 @@ input,
 select,
 optgroup,
 textarea {
-  color: #404040;
+  color: #000000;
   font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-size: 16px;
   line-height: 1.5;
@@ -517,14 +517,52 @@ table {
 
 /* Links
 --------------------------------------------- */
+.underline, a {
+  position: relative;
+}
+.underline:after, a:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  right: 0;
+  opacity: 1;
+  background-color: #000;
+  transition: all 0.5s ease-out;
+}
+.underline:hover:after, a:hover:after {
+  left: 100%;
+  opacity: 0;
+}
+
+.underline-reverse, .home #primary article .post-link-wrap h2 {
+  position: relative;
+}
+.underline-reverse:after, .home #primary article .post-link-wrap h2:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  right: 100%;
+  opacity: 0;
+  background-color: #000;
+  transition: all 0.5s ease-out;
+}
+.underline-reverse:hover:after, .home #primary article .post-link-wrap h2:hover:after {
+  right: 0;
+  opacity: 1;
+}
+
 a {
-  color: #4169e1;
+  color: #000000;
 }
 a:visited {
-  color: #800080;
+  color: #000000;
 }
 a:hover, a:focus, a:active {
-  color: #191970;
+  color: #000000;
 }
 a:focus {
   outline: thin dotted;
@@ -629,6 +667,9 @@ textarea {
   display: flex;
   padding: 0 2.5rem 2rem;
 }
+.home #primary article .post-link-wrap:after {
+  display: none;
+}
 .home #primary article .post-link-wrap .rotate-90 h2 {
   transform: rotate(-90deg);
   position: absolute;
@@ -650,10 +691,14 @@ textarea {
 }
 .home #primary article .post-link-wrap .post-thumbnail img {
   transform-origin: center;
-  transition: all 0.3s;
+  transition: all 1s;
 }
 .home #primary article .post-link-wrap:hover .post-thumbnail img {
-  transform: scale(1.125);
+  transform: scale(1.1);
+}
+.home #primary article .post-link-wrap:hover h2:after {
+  right: 0;
+  opacity: 1;
 }
 
 @media screen and (min-width: 800px) {
@@ -687,6 +732,9 @@ textarea {
 #masthead {
   margin: 1rem 1.5rem 0;
 }
+#masthead .site-branding a:after {
+  display: none;
+}
 #masthead .main-navigation {
   position: fixed;
   top: 1rem;
@@ -699,10 +747,36 @@ textarea {
 }
 #masthead .main-navigation ul li a {
   font-size: 1.5rem;
-  line-height: 1;
+  line-height: 1.2;
   font-weight: 500;
   color: #000;
   text-decoration: none;
+  position: relative;
+  z-index: 10;
+  display: block;
+  text-align: center;
+  width: 1.25em;
+  height: 1.25em;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+#masthead .main-navigation ul li a:after {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 100%;
+  opacity: 0;
+  height: auto;
+  z-index: -1;
+}
+#masthead .main-navigation ul li a:hover {
+  color: #fff;
+}
+#masthead .main-navigation ul li a:hover:after {
+  top: 0;
+  opacity: 1;
 }
 
 @media screen and (min-width: 800px) {
@@ -868,7 +942,7 @@ textarea {
   box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.6);
   clip: auto !important;
   clip-path: none;
-  color: #21759b;
+  color: #000000;
   display: block;
   font-size: 0.875rem;
   font-weight: 700;

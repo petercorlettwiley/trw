@@ -1,5 +1,49 @@
+.underline {
+	position: relative;
+
+	&:after {
+		content: '';
+	  position: absolute;
+	  left: 0;
+	  bottom: 0;
+	  height: 1px;
+	  right: 0;
+	  opacity: 1;
+	  background-color: $color__black;
+	  transition: all 0.5s ease-out;
+	}
+
+	&:hover:after {
+		left: 100%;
+		opacity: 0;
+	}
+}
+
+.underline-reverse {
+	position: relative;
+
+	&:after {
+		content: '';
+	  position: absolute;
+	  left: 0;
+	  bottom: 0;
+	  height: 1px;
+	  right: 100%;
+	  opacity: 0;
+	  background-color: $color__black;
+	  transition: all 0.5s ease-out;
+	}
+
+	&:hover:after {
+		right: 0;
+		opacity: 1;
+	}
+}
+
 a {
 	color: $color__link;
+
+	@extend .underline;
 
 	&:visited {
 		color: $color__link-visited;
