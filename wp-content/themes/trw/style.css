@@ -683,6 +683,7 @@ textarea {
   font-weight: 400;
   color: #000;
   letter-spacing: 0.05em;
+  transition: all 1s;
 }
 .home #primary article .post-link-wrap .post-thumbnail {
   align-self: flex-end;
@@ -699,6 +700,13 @@ textarea {
 .home #primary article .post-link-wrap:hover h2:after {
   right: 0;
   opacity: 1;
+}
+.home #primary article .post-link-wrap:not(.visible) h2 {
+  opacity: 0;
+}
+.home #primary article .post-link-wrap:not(.visible) .post-thumbnail img {
+  opacity: 0;
+  transform: translate(0, 50%);
 }
 
 @media screen and (min-width: 800px) {
