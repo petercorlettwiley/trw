@@ -31,10 +31,6 @@ $size__vertical-padding-scale-full: 2;
         }
 
         h2 {
-          font-size: 1rem;
-          font-weight: 400;
-          color: $color__black;
-          letter-spacing: $font__letter-spacing-loose;
           transition: $transition__slow;
 
           @extend .underline-reverse;

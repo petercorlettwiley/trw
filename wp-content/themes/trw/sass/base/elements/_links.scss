@@ -1,5 +1,6 @@
 .underline {
 	position: relative;
+	text-decoration: none;
 
 	&:after {
 		content: '';
@@ -21,6 +22,7 @@
 
 .underline-reverse {
 	position: relative;
+	text-decoration: none;
 
 	&:after {
 		content: '';

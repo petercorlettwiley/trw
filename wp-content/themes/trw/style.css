@@ -48,6 +48,13 @@ Nicolas Gallagher and Jonathan Neal https://necolas.github.io/normalize.css/
 	- Alignments
 
 --------------------------------------------------------------*/
+.margin__firstlastchild:first-child, p:first-child {
+  margin-top: 0;
+}
+.margin__firstlastchild:last-child, p:last-child {
+  margin-bottom: 0;
+}
+
 /*--------------------------------------------------------------
 # Generic
 --------------------------------------------------------------*/
@@ -402,8 +409,18 @@ h6 {
   clear: both;
 }
 
+h1, h2 {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #000;
+  letter-spacing: 0.05em;
+}
+
 p {
+  font-weight: 300;
+  letter-spacing: 0.05em;
   margin-bottom: 1.5em;
+  margin-top: 1.5em;
 }
 
 dfn,
@@ -519,6 +536,7 @@ table {
 --------------------------------------------- */
 .underline, a {
   position: relative;
+  text-decoration: none;
 }
 .underline:after, a:after {
   content: "";
@@ -538,6 +556,7 @@ table {
 
 .underline-reverse, .home #primary article .post-link-wrap h2 {
   position: relative;
+  text-decoration: none;
 }
 .underline-reverse:after, .home #primary article .post-link-wrap h2:after {
   content: "";
@@ -679,10 +698,6 @@ textarea {
   margin: 0;
 }
 .home #primary article .post-link-wrap h2 {
-  font-size: 1rem;
-  font-weight: 400;
-  color: #000;
-  letter-spacing: 0.05em;
   transition: all 1s;
 }
 .home #primary article .post-link-wrap .post-thumbnail {
@@ -803,9 +818,52 @@ textarea {
   #masthead .main-navigation {
     position: static;
   }
+
+  .admin-bar #masthead {
+    top: 32px;
+  }
 }
 /* Posts and pages
 --------------------------------------------- */
+body.single .post-text-wrap {
+  width: 100%;
+  padding: 1rem 1.5rem 0;
+}
+body.single .post-text-wrap header {
+  margin-top: 4rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #000;
+}
+body.single .post-text-wrap h1 {
+  margin: 0;
+}
+body.single .navigation.post-navigation {
+  display: none;
+}
+
+@media screen and (min-width: 800px) {
+  body.single article {
+    display: flex;
+    margin-top: 8rem;
+    height: calc(100vh - 13rem);
+  }
+  body.single .post-text-wrap {
+    width: 50%;
+    max-width: 36rem;
+    padding: 0 4rem;
+  }
+  body.single .post-text-wrap header {
+    margin-top: 0;
+  }
+  body.single .entry-media {
+    width: 50%;
+    flex-grow: 1;
+  }
+  body.single.admin-bar article {
+    height: calc(100vh - 13rem - 36px);
+  }
+}
 /* Comments
 --------------------------------------------- */
 .comment-content a {

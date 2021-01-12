@@ -1,8 +1,3 @@
-$size__unit-header-offset-vertical: 1rem;
-$size__unit-header-offset-horizontal: $size__unit-horizontal;
-$size__unit-header-offset-vertical-full: 1.5rem;
-$size__unit-header-offset-horizontal-full: $size__unit-horizontal-full;
-
 #masthead {
 	margin: $size__unit-header-offset-vertical $size__unit-header-offset-horizontal 0;
 
@@ -65,8 +60,6 @@ $size__unit-header-offset-horizontal-full: $size__unit-horizontal-full;
 	}
 }
 
-
-
 @media screen and (min-width: $breakpoint__mobile) {
 	#masthead {
 		margin: 0;
@@ -87,5 +80,11 @@ $size__unit-header-offset-horizontal-full: $size__unit-horizontal-full;
 			position: static;
 		}
 
+	}
+
+	.admin-bar {
+		#masthead {
+			top: 32px;
+		}
 	}
 }
