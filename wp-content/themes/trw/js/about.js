@@ -13,5 +13,8 @@ if ( $aboutLink.length == 0 ) {
   return;
 }
 
+$aboutLink.click(function(event){
+  event.preventDefault();
+});
 
 }( jQuery ) );
