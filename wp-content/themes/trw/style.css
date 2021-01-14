@@ -825,6 +825,11 @@ textarea {
 }
 /* Posts and pages
 --------------------------------------------- */
+body {
+  overscroll-behavior-x: none;
+  overscroll-behavior-Y: none;
+}
+
 body.single .post-text-wrap {
   width: 100%;
   padding: 1rem 1.5rem 0;
@@ -859,6 +864,32 @@ body.single .navigation.post-navigation {
   body.single .entry-media {
     width: 50%;
     flex-grow: 1;
+    box-sizing: border-box;
+    padding: 0 4rem 0 3rem;
+    display: flex;
+    overflow: hidden;
+  }
+  body.single .entry-media .media-item {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    position: relative;
+  }
+  body.single .entry-media .media-item img {
+    width: auto;
+    max-height: 100%;
+  }
+  body.single .entry-media .media-item .rotate-90 {
+    margin-left: -3em;
+    margin-right: 3em;
+  }
+  body.single .entry-media .media-item .rotate-90 span {
+    transform: rotate(-90deg);
+    position: absolute;
+    transform-origin: 0 0;
+    font-weight: 300;
+    bottom: -1em;
+    letter-spacing: 0.05em;
   }
   body.single.admin-bar article {
     height: calc(100vh - 13rem - 36px);

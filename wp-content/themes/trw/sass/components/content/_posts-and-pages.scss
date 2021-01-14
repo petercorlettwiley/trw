@@ -1,3 +1,8 @@
+body {
+  overscroll-behavior-x: none;
+  overscroll-behavior-y: none;
+}
+
 body.single {
 
   .post-text-wrap {
@@ -49,6 +54,39 @@ body.single {
     .entry-media {
       width: 50%;
       flex-grow: 1;
+      box-sizing: border-box;
+      padding: 0 $size__unit-header-offset-horizontal-full 0 3rem;
+      display: flex;
+      overflow: hidden;
+
+      .media-item {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        position: relative;
+
+        img {
+          width: auto;
+          max-height: 100%;
+        }
+
+        .rotate-90 {
+          margin-left: -3em;
+          margin-right: 3em;
+
+          span {
+            transform: rotate(-90deg);
+            position: absolute;
+            transform-origin: 0 0;
+            font-weight: 300;
+            bottom: -1em;
+            letter-spacing: $font__letter-spacing-loose;
+            ////bottom: -1rem;
+            //left: 0rem;
+            //margin: 0;
+          }
+        }
+      }
     }
 
     &.admin-bar {

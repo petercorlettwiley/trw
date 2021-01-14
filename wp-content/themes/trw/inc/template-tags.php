@@ -154,9 +154,20 @@ if ( ! function_exists( 'trw_get_media' ) ) :
 			return false;
 		}
 
-		// get repeater field of media
+		$media = get_field( 'media', $id );
 
-		return;
+		if ( !$media ) {
+			return false;
+
+		} else {
+
+			foreach( $media as $media_item ) {
+				$file = $media_item['file'];
+				$media_files[] = $file;
+			}
+		}
+
+		return $media_files;
 	}
 endif;
 
@@ -164,8 +175,36 @@ if ( ! function_exists( 'trw_show_media' ) ) :
 	/**
 	 * Returns gallery of media for any given post
 	 */
-	function trw_show_media( $id, $size = 'full', $count = 'all' ) {
-		echo $count;
+	function trw_show_media( $id, $size = 'full', $select = 'all' ) {
+
+		$media = trw_get_media( $id );
+
+		if ( !$media ) {
+			return false;
+		}
+
+		$media_count = count( $media );
+		$media_markup = '<div class="media-gallery count-' . $media_count . '">';
+
+		if ( $select == 'all' ) {
+
+			foreach( $media as $media_number=>$media_item ) {
+				$type = $media_item['type'];
+				$src = $media_item['url'];
+				$alt = ($media_item['alt'] ? $media_item['alt'] : ' ');
+				$width = $media_item['width'];
+				$height = $media_item['height'];
+				$number = $media_number;
+
+				if ( $type == 'image' ) {
+					$media_markup .= '<div class="media-item image" id="media-' . $number . '"><div class="media-counter rotate-90"><span>' . intval($number+1) . ' of ' . $media_count . '</span></div><img src="' . $src . '" alt="' . $alt . '" width="' . $width . '" height="' . $height . '"></div>';
+				}
+			}
+		}
+
+		$media_markup .= '</div>';
+
+		echo $media_markup;
 	}
 endif;
 
