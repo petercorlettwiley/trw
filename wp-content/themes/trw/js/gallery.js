@@ -67,6 +67,31 @@ function checkScroll ( delta ) {
   }
 }
 
+const $arrowNav = $('.media-nav');
+
+if ( $arrowNav.length > 0 ) {
+  $arrowNav.find('a.prev').click(function(event){
+    event.preventDefault();
+
+    if ( !scrolling ) {
+      prevSlide();
+    }
+  });
+  $arrowNav.find('a.next').click(function(event){
+    event.preventDefault();
+
+    if ( !scrolling ) {
+      nextSlide();
+    }
+  });
+}
+
+$gallery.click(function() {
+  if ( !scrolling ) {
+    nextSlide();
+  }
+});
+
 function nextSlide() {
   // remove previous index
   scrolling = true;

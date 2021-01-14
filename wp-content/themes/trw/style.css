@@ -55,6 +55,10 @@ Nicolas Gallagher and Jonathan Neal https://necolas.github.io/normalize.css/
   margin-bottom: 0;
 }
 
+.no-focus:focus, body.single .media-nav a:focus, #masthead .main-navigation ul li a:focus, #masthead .site-branding a:focus {
+  outline: none;
+}
+
 /*--------------------------------------------------------------
 # Generic
 --------------------------------------------------------------*/
@@ -827,7 +831,7 @@ textarea {
 --------------------------------------------- */
 body {
   overscroll-behavior-x: none;
-  overscroll-behavior-Y: none;
+  overscroll-behavior-y: none;
 }
 
 body.single .post-text-wrap {
@@ -846,7 +850,6 @@ body.single .post-text-wrap h1 {
 body.single .navigation.post-navigation {
   display: none;
 }
-
 @media screen and (min-width: 800px) {
   body.single article {
     display: flex;
@@ -867,6 +870,9 @@ body.single .navigation.post-navigation {
     box-sizing: border-box;
     padding: 0 4rem 0 3rem;
     display: flex;
+    position: relative;
+  }
+  body.single .entry-media .media-gallery {
     overflow: hidden;
   }
   body.single .entry-media .media-item {
@@ -893,6 +899,36 @@ body.single .navigation.post-navigation {
   }
   body.single.admin-bar article {
     height: calc(100vh - 13rem - 36px);
+  }
+  body.single .media-nav {
+    position: absolute;
+    bottom: -3rem;
+    left: 3rem;
+    right: 4rem;
+    display: flex;
+    justify-content: space-between;
+  }
+  body.single .media-nav a {
+    display: block;
+    height: 1rem;
+    width: 4rem;
+    background: url("/wp-content/themes/trw/img/arrow.svg") no-repeat 50%;
+    background-size: contain;
+    position: relative;
+    left: 0;
+    transition: all 0.3s;
+  }
+  body.single .media-nav a:after {
+    display: none;
+  }
+  body.single .media-nav a:hover {
+    left: 0.25rem;
+  }
+  body.single .media-nav a.prev {
+    transform: rotate(180deg);
+  }
+  body.single .media-nav a.prev:hover {
+    left: -0.25rem;
   }
 }
 /* Comments

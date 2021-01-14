@@ -208,5 +208,14 @@ if ( ! function_exists( 'trw_show_media' ) ) :
 	}
 endif;
 
-
-
+if ( ! function_exists( 'trw_media_nav' ) ) :
+	/**
+	 * Displays prev/next buttons for gallery images
+	 */
+	function trw_media_nav() {
+		?>
+		<a href="#prev" class="prev"></a>
+		<a href="#next" class="next"></a>
+		<?php
+	}
+endif;

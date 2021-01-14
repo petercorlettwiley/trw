@@ -54,6 +54,12 @@
 	<div class="entry-media">
 
 		<?php trw_show_media( get_the_ID(), 'full', 'all' ); ?>
+
+		<div class="media-nav">
+
+			<?php trw_media_nav(); ?>
+		
+		</div>
 		
 	</div>
 

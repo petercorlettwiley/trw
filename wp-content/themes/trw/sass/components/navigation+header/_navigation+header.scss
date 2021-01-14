@@ -5,6 +5,9 @@
 		a:after {
 			display: none;
 		}
+		a {
+			@extend .no-focus;
+		}
 	}
 
 	.main-navigation {
@@ -35,6 +38,7 @@
 					border-radius: 50%;
 					overflow: hidden;
 					transition: $transition__standard;
+					@extend .no-focus;
 
 					&:after {
 						left: 0;
