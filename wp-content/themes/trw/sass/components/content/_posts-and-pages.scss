@@ -68,30 +68,35 @@ body.single {
       padding: 0 $gallery-padding-right 0 $gallery-padding-left;
       display: flex;
       position: relative;
+      overflow: hidden;
 
       .media-gallery {
-        overflow: hidden;
+        //overflow: hidden;
       }
 
       .media-item {
         height: 100%;
-        display: flex;
-        justify-content: center;
+        //display: flex;
+        //justify-content: center;
         position: relative;
+        text-align: center;
 
         img {
           width: auto;
           max-height: 100%;
+          position: relative;
+          top: 50%;
+          transform: translateY(-50%);
         }
 
         .rotate-90 {
-          margin-left: -3em;
-          margin-right: 3em;
+          //margin-left: -3em;
+          //margin-right: 3em;
 
           span {
             transform: rotate(-90deg);
-            position: absolute;
-            transform-origin: 0 0;
+            display: block;
+            transform-origin: 100% 0;
             font-weight: 300;
             bottom: -1em;
             letter-spacing: $font__letter-spacing-loose;

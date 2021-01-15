@@ -871,28 +871,24 @@ body.single .navigation.post-navigation {
     padding: 0 4rem 0 3rem;
     display: flex;
     position: relative;
-  }
-  body.single .entry-media .media-gallery {
     overflow: hidden;
   }
   body.single .entry-media .media-item {
     height: 100%;
-    display: flex;
-    justify-content: center;
     position: relative;
+    text-align: center;
   }
   body.single .entry-media .media-item img {
     width: auto;
     max-height: 100%;
-  }
-  body.single .entry-media .media-item .rotate-90 {
-    margin-left: -3em;
-    margin-right: 3em;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
   }
   body.single .entry-media .media-item .rotate-90 span {
     transform: rotate(-90deg);
-    position: absolute;
-    transform-origin: 0 0;
+    display: block;
+    transform-origin: 100% 0;
     font-weight: 300;
     bottom: -1em;
     letter-spacing: 0.05em;
