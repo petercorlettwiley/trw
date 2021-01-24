@@ -850,6 +850,18 @@ body.single .post-text-wrap h1 {
 body.single .navigation.post-navigation {
   display: none;
 }
+body.single .entry-media {
+  box-sizing: border-box;
+  padding: 0 1.5rem;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  max-height: 80vh;
+}
+body.single .entry-media .media-item {
+  height: 100%;
+}
+
 @media screen and (min-width: 800px) {
   body.single article {
     display: flex;

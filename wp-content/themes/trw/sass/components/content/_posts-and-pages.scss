@@ -32,6 +32,19 @@ body.single {
       @extend .no-focus;
     }
   }
+
+  .entry-media {
+    box-sizing: border-box;
+    padding: 0 $size__unit-header-offset-horizontal;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    max-height: 80vh;
+
+    .media-item {
+      height: 100%;
+    }
+  }
 }
     
 
@@ -78,12 +91,8 @@ body.single {
 
       .media-item {
         height: 100%;
-        //display: flex;
-        //justify-content: center;
         position: relative;
         text-align: center;
-        //padding-top: 1rem;
-        //padding-bottom: 1rem;
 
         img {
           width: auto;
@@ -99,14 +108,9 @@ body.single {
 
           span {
             transform: rotate(-90deg);
-            display: inline-block;
-            
+            display: inline-block;  
             font-weight: 300;
-            //bottom: -1em;
             letter-spacing: $font__letter-spacing-loose;
-            ////bottom: -1rem;
-            //left: 0rem;
-            //margin: 0;
           }
         }
       }
