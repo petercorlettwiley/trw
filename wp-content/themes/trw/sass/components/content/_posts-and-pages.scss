@@ -39,10 +39,51 @@ body.single {
     display: flex;
     position: relative;
     overflow: hidden;
-    max-height: 80vh;
+    margin-top: 4rem;
+    max-height: 50vh;
 
     .media-item {
       height: 100%;
+
+      .rotate-90 {
+        text-align: center;
+      }
+    }
+  }
+
+  .media-nav {
+    position: fixed;
+    left: $size__unit-header-offset-horizontal;
+    right: $size__unit-header-offset-horizontal;
+    bottom: 3rem;
+    display: flex;
+    justify-content: space-between;
+
+    a {
+      display: block;
+      height: 1rem;
+      width: 4rem;
+      background: url($img__arrow) no-repeat 50%;
+      background-size: contain;
+      position: relative;
+      left: 0;
+      transition: $transition__standard;
+
+      &:after {
+        display: none;
+      }
+
+      &:hover {
+        left: 0.25rem;
+      }
+
+      &.prev {
+        transform: rotate(180deg);
+
+        &:hover {
+          left: -0.25rem;
+        }
+      }
     }
   }
 }
@@ -51,7 +92,7 @@ body.single {
 @media screen and (min-width: $breakpoint__mobile) {
 
   $size__unit-post-offset: 8rem;
-  $size__unit-post-offset-bottom: 5rem;
+  $size__unit-post-offset-bottom: 3rem;
 
   body.single {
   
@@ -79,20 +120,24 @@ body.single {
       flex-grow: 1;
       box-sizing: border-box;
       padding: 0 $gallery-padding-right 0 $gallery-padding-left;
-      //margin-top: -1rem;
-      //margin-bottom: -1rem;
+      margin-top: 0;
+      max-height: unset;
       display: flex;
       position: relative;
-      overflow: hidden;
+      //overflow: hidden;
 
       .media-gallery {
-        //overflow: hidden;
+        margin-bottom: 3rem;
       }
 
       .media-item {
         height: 100%;
         position: relative;
         text-align: center;
+
+        &:not(:first-child) {
+          opacity: 0;
+        }
 
         img {
           width: auto;
@@ -105,6 +150,7 @@ body.single {
         .rotate-90 {
           position: absolute;
           bottom: 1em;
+          text-align: unset;
 
           span {
             transform: rotate(-90deg);
@@ -124,38 +170,9 @@ body.single {
 
     .media-nav {
       position: absolute;
-      bottom: -3rem;
+      bottom: 0;
       left: $gallery-padding-left;
       right: $gallery-padding-right;
-      display: flex;
-      justify-content: space-between;
-
-      a {
-        display: block;
-        height: 1rem;
-        width: 4rem;
-        background: url($img__arrow) no-repeat 50%;
-        background-size: contain;
-        position: relative;
-        left: 0;
-        transition: $transition__standard;
-
-        &:after {
-          display: none;
-        }
-
-        &:hover {
-          left: 0.25rem;
-        }
-
-        &.prev {
-          transform: rotate(180deg);
-
-          &:hover {
-            left: -0.25rem;
-          }
-        }
-      }
     }
   }
 }
