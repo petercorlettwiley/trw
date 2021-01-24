@@ -94,17 +94,13 @@ body.single {
         }
 
         .rotate-90 {
-          //margin-left: -3em;
-          //margin-right: 3em;
-
-          //position: absolute;
-          //left: -5rem;
-          //bottom: 4rem;
+          position: absolute;
+          bottom: 1em;
 
           span {
             transform: rotate(-90deg);
-            display: block;
-            transform-origin: 100% 0;
+            display: inline-block;
+            
             font-weight: 300;
             //bottom: -1em;
             letter-spacing: $font__letter-spacing-loose;
