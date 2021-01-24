@@ -66,6 +66,8 @@ body.single {
       flex-grow: 1;
       box-sizing: border-box;
       padding: 0 $gallery-padding-right 0 $gallery-padding-left;
+      //margin-top: -1rem;
+      //margin-bottom: -1rem;
       display: flex;
       position: relative;
       overflow: hidden;
@@ -80,6 +82,8 @@ body.single {
         //justify-content: center;
         position: relative;
         text-align: center;
+        //padding-top: 1rem;
+        //padding-bottom: 1rem;
 
         img {
           width: auto;
@@ -93,12 +97,16 @@ body.single {
           //margin-left: -3em;
           //margin-right: 3em;
 
+          //position: absolute;
+          //left: -5rem;
+          //bottom: 4rem;
+
           span {
             transform: rotate(-90deg);
             display: block;
             transform-origin: 100% 0;
             font-weight: 300;
-            bottom: -1em;
+            //bottom: -1em;
             letter-spacing: $font__letter-spacing-loose;
             ////bottom: -1rem;
             //left: 0rem;

@@ -890,7 +890,6 @@ body.single .navigation.post-navigation {
     display: block;
     transform-origin: 100% 0;
     font-weight: 300;
-    bottom: -1em;
     letter-spacing: 0.05em;
   }
   body.single.admin-bar article {
