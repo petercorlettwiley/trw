@@ -219,3 +219,27 @@ if ( ! function_exists( 'trw_media_nav' ) ) :
 		<?php
 	}
 endif;
+
+if ( ! function_exists( 'trw_get_about' ) ) :
+	/**
+	 * Displays about page content
+	 */
+	function trw_get_about() {
+
+		$about_content = get_field('about_content', 'options');
+		$contact_email = get_field('contact_email', 'options');
+		$instagram_link = get_field('instagram_link', 'options');
+
+		?>
+
+		<a href="mailto:<?php echo $contact_email; ?>" id="contact">contact</a>
+
+		<div class="about-content">
+			<?php echo $about_content; ?>
+		</div>
+
+		<a href="mailto:<?php echo $instagram_link; ?>" id="instagram">instagram</a>
+
+		<?php
+	}
+endif;

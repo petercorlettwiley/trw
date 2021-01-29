@@ -751,6 +751,28 @@ textarea {
     z-index: 9;
   }
 }
+body.about-open {
+  overflow: hidden;
+}
+
+#about.open {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99;
+  background-color: #00000082;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+#about.open .wrap {
+  padding: 3rem 4rem;
+  text-align: center;
+}
+
 /*--------------------------------------------------------------
 # Components
 --------------------------------------------------------------*/
@@ -779,7 +801,7 @@ textarea {
   color: #000;
   text-decoration: none;
   position: relative;
-  z-index: 10;
+  z-index: 100;
   display: block;
   text-align: center;
   width: 1.25em;

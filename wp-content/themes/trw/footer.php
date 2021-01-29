@@ -10,6 +10,12 @@
  */
 
 ?>
+  
+  <section id="about">
+    <div class="wrap">
+      <?php trw_get_about(); ?>
+    </div>
+  </section>
 
   <footer id="footer">
     <div class="color-buttons">

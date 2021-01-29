@@ -1,0 +1,25 @@
+$bgcolor: #00000082;
+
+body.about-open {
+  overflow: hidden;
+}
+
+#about.open {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99;
+  background-color: $bgcolor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color__white;
+
+  .wrap {
+    padding: $size__unit-vertical-full $size__unit-horizontal-full;
+    text-align: center;
+
+  }
+}
