@@ -93,6 +93,11 @@ $gallery.click(function() {
 });
 
 function nextSlide() {
+
+  if ($('body').hasClass('about-open')) {
+    return false;
+  }
+
   // remove previous index
   scrolling = true;
   const $lastItem = $gallery.find( '#media-'+index );
@@ -120,6 +125,11 @@ function nextSlide() {
 }
 
 function prevSlide() {
+
+  if ($('body').hasClass('about-open')) {
+    return false;
+  }
+
   // remove previous index
   scrolling = true;
   const $lastItem = $gallery.find( '#media-'+index );

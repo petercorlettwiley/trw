@@ -39,8 +39,10 @@ $(document).keyup( function(event){
 });
 
 function openAboutPage() {
-  $aboutPage.toggleClass('open');
-  $body.toggleClass('about-open');
+  if (!$body.hasClass('about-open')) {
+    $aboutPage.addClass('open');
+    $body.addClass('about-open');
+  }
 }
 
 function closeAboutPage() {

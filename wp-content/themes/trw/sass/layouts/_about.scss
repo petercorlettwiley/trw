@@ -4,7 +4,7 @@ body.about-open {
   overflow: hidden;
 }
 
-#about.open {
+#about {
   position: fixed;
   top: 0;
   left: 0;
@@ -16,10 +16,29 @@ body.about-open {
   align-items: center;
   justify-content: center;
   color: $color__white;
+  opacity: 1;
+  transition: all 0.5s ease-in;
+  transition-delay: 0;
 
   .wrap {
+    opacity: 1;
+    transition: all 0.6s ease-in;
+    transition-delay: 0.6s;
     padding: $size__unit-vertical-full $size__unit-horizontal-full;
     text-align: center;
 
+  }
+}
+
+#about:not(.open) {
+  pointer-events: none;
+  opacity: 0;
+  top: 100%;
+  transition-delay: 0.4s;
+
+  .wrap {
+    opacity: 0;
+    transition-delay: 0;
+    transition: all 0.3s;
   }
 }

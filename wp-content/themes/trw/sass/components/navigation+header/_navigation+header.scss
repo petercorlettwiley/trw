@@ -64,6 +64,15 @@
 	}
 }
 
+body.about-open #masthead .main-navigation ul li a {
+	color: $color__white;
+	
+	&:after {
+		top: 0;
+		opacity: 1;
+	}
+}
+
 @media screen and (min-width: $breakpoint__mobile) {
 	#masthead {
 		margin: 0;
