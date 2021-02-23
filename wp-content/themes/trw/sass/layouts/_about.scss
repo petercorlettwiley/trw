@@ -1,4 +1,4 @@
-$bgcolor: #00000082;
+$bgcolor: #000000cc;
 
 body.about-open {
   overflow: hidden;
@@ -27,6 +27,31 @@ body.about-open {
     padding: $size__unit-vertical-full $size__unit-horizontal-full;
     text-align: center;
 
+  }
+
+  .about-content {
+    height: calc(100vh - 17rem);
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    &:before, &:after {
+      content: '';
+      position: absolute;
+      left: calc(50% - 1px);
+      width: 2px;
+      background-color: $color__white;
+    }
+
+    &:before {
+      top: 0;
+      bottom: calc(50% + 2.5rem);
+    }
+
+    &:after {
+      top: calc(50% + 3rem);
+      bottom: 0;
+    }
   }
 }
 
@@ -85,6 +110,27 @@ body.about-open {
   &:hover {
     border-color: $color__black;
   }
+}
+
+a#contact, a#instagram {
+  font-weight: bold;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+
+  &:after {
+    display: none;
+  }
+}
+
+a#contact {
+  color: $color__blue;
+  top: 6rem;
+}
+
+a#instagram {
+  color: $color__red;
+  bottom: 6rem;
 }
 
 @media screen and (min-width: $breakpoint__mobile) {
