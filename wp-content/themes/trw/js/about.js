@@ -9,10 +9,11 @@
 
 const $aboutLink = $('a[href="#about"');
 const $aboutPage = $('#about');
+const $aboutClose = $('#aboutClose');
 const $aboutContent = $('#about a, #about .about-content');
 const $body = $('body');
 
-if ( $aboutLink.length == 0 || $aboutPage.length == 0 || $aboutContent == 0 ) {
+if ( $aboutLink.length == 0 || $aboutPage.length == 0 || $aboutContent.length == 0 || $aboutClose.length == 0) {
   return;
 }
 
@@ -27,6 +28,12 @@ $aboutContent.on('click', function (event) {
 });
 
 $aboutPage.on('click', function (event) {
+  event.preventDefault();
+
+  closeAboutPage();
+});
+
+$aboutClose.on('click', function (event) {
   event.preventDefault();
 
   closeAboutPage();

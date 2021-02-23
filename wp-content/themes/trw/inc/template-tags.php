@@ -232,6 +232,8 @@ if ( ! function_exists( 'trw_get_about' ) ) :
 
 		?>
 
+		<a href="#about-close" id="aboutClose">X</a>
+
 		<a href="mailto:<?php echo $contact_email; ?>" id="contact">contact</a>
 
 		<div class="about-content">

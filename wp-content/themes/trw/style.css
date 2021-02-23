@@ -791,6 +791,53 @@ body.about-open {
   transition: all 0.3s;
 }
 
+#aboutClose {
+  display: block;
+  position: fixed;
+  top: 1rem;
+  right: 1.5rem;
+  font-size: 0;
+  width: 1.875rem;
+  height: 1.875rem;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  text-decoration: none;
+  transition: all 0.5s ease-out;
+}
+#aboutClose:after {
+  transform: rotate(45deg);
+  top: 0.75rem;
+  left: 0.25rem;
+  right: 0.25rem;
+  bottom: unset;
+  height: 2px;
+  opacity: 1;
+  background-color: #fff;
+  transition: all 0.5s ease-out;
+}
+#aboutClose:before {
+  content: "";
+  position: absolute;
+  transform: rotate(-45deg);
+  top: 0.75rem;
+  left: 0.25rem;
+  right: 0.25rem;
+  bottom: unset;
+  height: 2px;
+  opacity: 1;
+  background-color: #fff;
+  transition: all 0.5s ease-out;
+}
+#aboutClose:hover {
+  border-color: #000;
+}
+
+@media screen and (min-width: 800px) {
+  #aboutClose {
+    top: 1.5rem;
+    right: 4rem;
+  }
+}
 /*--------------------------------------------------------------
 # Components
 --------------------------------------------------------------*/
@@ -847,7 +894,7 @@ body.about-open {
 }
 
 body.about-open #masthead .main-navigation ul li a {
-  color: #fff;
+  color: #000;
 }
 body.about-open #masthead .main-navigation ul li a:after {
   top: 0;
