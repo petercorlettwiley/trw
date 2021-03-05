@@ -58,11 +58,12 @@ body.single {
 
       .nav-previous { // hide for now
         display: none;
+        text-align: right;
       }
 
       .nav-next {
         display: none; // hide until scrolled til last image
-        text-align: right;
+        //text-align: right;
       }
     }
   }

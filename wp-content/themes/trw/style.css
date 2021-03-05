@@ -1048,10 +1048,10 @@ body.single .navigation.post-navigation .nav-links div a {
 }
 body.single .navigation.post-navigation .nav-links .nav-previous {
   display: none;
+  text-align: right;
 }
 body.single .navigation.post-navigation .nav-links .nav-next {
   display: none;
-  text-align: right;
 }
 body.single .entry-media {
   box-sizing: border-box;

@@ -100,7 +100,7 @@ function nextSlide() {
 
   // show 'next project' button
   if ( index == $galleryItem.length-1 ) {
-    $('.nav-next').fadeIn();
+    $('.nav-previous').fadeIn();
     return;
   }
 
@@ -138,7 +138,7 @@ function prevSlide() {
 
   // hide 'next project' button
   if ( index < $galleryItem.length ) {
-    $('.nav-next').fadeOut();
+    $('.nav-previous').fadeOut();
   }
 
   // remove previous index
