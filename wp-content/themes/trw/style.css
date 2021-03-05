@@ -48,6 +48,42 @@ Nicolas Gallagher and Jonathan Neal https://necolas.github.io/normalize.css/
 	- Alignments
 
 --------------------------------------------------------------*/
+@keyframes underline-motion-ltr {
+  0% {
+    left: 0;
+    right: 100%;
+  }
+  50% {
+    left: 0;
+    right: 0;
+  }
+  100% {
+    left: 100%;
+    right: 0;
+  }
+}
+@keyframes underline-motion-ltr-reverse {
+  0% {
+    left: 0;
+    right: 0;
+    opacity: 1;
+  }
+  33% {
+    left: 100%;
+    right: 0;
+    opacity: 0;
+  }
+  66% {
+    left: 0;
+    right: 100%;
+    opacity: 0;
+  }
+  100% {
+    left: 0;
+    right: 0;
+    opacity: 1;
+  }
+}
 .margin__firstlastchild:first-child, p:first-child {
   margin-top: 0;
 }
@@ -415,7 +451,7 @@ h6 {
 
 h1, h2 {
   font-size: 1rem;
-  font-weight: 400;
+  font-weight: 800;
   color: #000;
   letter-spacing: 0.05em;
 }
@@ -978,13 +1014,44 @@ body.single .post-text-wrap header {
   margin-top: 4rem;
   margin-bottom: 1.5rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid #000;
+  position: relative;
+}
+body.single .post-text-wrap header:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  right: 0;
+  background-color: #000;
+  animation-name: underline-motion-ltr-reverse;
+  animation-duration: 2s;
+  animation-delay: 2s;
+  animation-iteration-count: 1;
 }
 body.single .post-text-wrap h1 {
   margin: 0;
 }
 body.single .navigation.post-navigation {
+  padding: 0 1.5rem 1rem;
+}
+body.single .navigation.post-navigation .nav-links {
+  display: flex;
+  justify-content: space-between;
+}
+body.single .navigation.post-navigation .nav-links div {
+  flex: auto;
+}
+body.single .navigation.post-navigation .nav-links div a {
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+body.single .navigation.post-navigation .nav-links .nav-previous {
   display: none;
+}
+body.single .navigation.post-navigation .nav-links .nav-next {
+  display: none;
+  text-align: right;
 }
 body.single .entry-media {
   box-sizing: border-box;
@@ -1000,6 +1067,11 @@ body.single .entry-media .media-item {
 }
 body.single .entry-media .media-item .rotate-90 {
   text-align: center;
+}
+body.single .entry-media .media-counter {
+  font-size: 0.875rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
 }
 body.single .media-nav {
   position: fixed;
@@ -1082,8 +1154,13 @@ body.single .media-nav a.prev:hover {
   body.single .entry-media .media-item .rotate-90 span {
     transform: rotate(-90deg);
     display: inline-block;
-    font-weight: 300;
-    letter-spacing: 0.05em;
+  }
+  body.single .navigation.post-navigation .nav-links div a {
+    transform: rotate(-90deg);
+    display: inline-block;
+    transform-origin: 0 0;
+    position: relative;
+    right: -2em;
   }
   body.single.admin-bar article {
     height: calc(100vh - 11rem - 36px);

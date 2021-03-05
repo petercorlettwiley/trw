@@ -98,6 +98,12 @@ function nextSlide() {
     return false;
   }
 
+  // show 'next project' button
+  if ( index == $galleryItem.length-1 ) {
+    $('.nav-next').fadeIn();
+    return;
+  }
+
   // remove previous index
   scrolling = true;
   const $lastItem = $gallery.find( '#media-'+index );
@@ -128,6 +134,11 @@ function prevSlide() {
 
   if ($('body').hasClass('about-open')) {
     return false;
+  }
+
+  // hide 'next project' button
+  if ( index < $galleryItem.length ) {
+    $('.nav-next').fadeOut();
   }
 
   // remove previous index

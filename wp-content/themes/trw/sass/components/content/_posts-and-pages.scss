@@ -14,7 +14,25 @@ body.single {
       margin-top: 4rem;
       margin-bottom: 1.5rem;
       padding-bottom: 1.5rem;
-      border-bottom: 1px solid $color__black;
+      //border-bottom: 1px solid $color__black;
+      //@extend .underline-reverse;
+
+      position: relative;
+      
+      &:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 1px;
+        right: 0;
+        background-color: $color__black;
+
+        animation-name: underline-motion-ltr-reverse;
+        animation-duration: 2s;
+        animation-delay: 2s;
+        animation-iteration-count: 1; // infinite
+      }
     }
 
     h1 {
@@ -22,9 +40,31 @@ body.single {
     }
   }
 
-  // hide post nav for now
   .navigation.post-navigation {
-    display: none;
+    padding: 0 $size__unit-header-offset-horizontal $size__unit-header-offset-vertical;
+    
+    .nav-links {
+      display: flex;
+      justify-content: space-between;
+
+      div {
+        flex: auto;
+
+        a {
+          font-weight: 800;
+          letter-spacing: $font__letter-spacing-loose;
+        }
+      }
+
+      .nav-previous { // hide for now
+        display: none;
+      }
+
+      .nav-next {
+        display: none; // hide until scrolled til last image
+        text-align: right;
+      }
+    }
   }
 
   .media-nav {
@@ -48,6 +88,12 @@ body.single {
       .rotate-90 {
         text-align: center;
       }
+    }
+
+    .media-counter {
+      font-size: 0.875rem;
+      font-weight: 800;
+      letter-spacing: $font__letter-spacing-loose;
     }
   }
 
@@ -155,8 +201,20 @@ body.single {
           span {
             transform: rotate(-90deg);
             display: inline-block;  
-            font-weight: 300;
-            letter-spacing: $font__letter-spacing-loose;
+          }
+        }
+      }
+    }
+
+    .navigation.post-navigation {  
+      .nav-links {
+        div {
+          a {
+            transform: rotate(-90deg);
+            display: inline-block;
+            transform-origin: 0 0;
+            position: relative;
+            right: -2em;
           }
         }
       }
