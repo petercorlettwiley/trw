@@ -521,6 +521,11 @@ body {
   background: #fff;
 }
 
+img {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
 hr {
   background-color: #ccc;
   border: 0;
