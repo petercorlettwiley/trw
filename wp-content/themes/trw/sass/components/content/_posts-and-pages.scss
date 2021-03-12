@@ -51,6 +51,7 @@ body.single {
         flex: auto;
 
         a {
+          font-size: 0.875rem;
           font-weight: 800;
           letter-spacing: $font__letter-spacing-loose;
         }
@@ -215,7 +216,7 @@ body.single {
             display: inline-block;
             transform-origin: 0 0;
             position: relative;
-            right: -2em;
+            right: -2rem;
           }
         }
       }
