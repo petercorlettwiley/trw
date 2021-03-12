@@ -44,3 +44,11 @@ function trw_upload_files( $allowed ) {
   return $allowed;
 }
 add_filter( 'upload_mimes', 'trw_upload_files');
+
+/**
+ * Link video.js plugin
+ */
+function trw_video_plugin() {
+  echo '<script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>';
+}
+add_action( 'wp_footer', 'trw_video_plugin' );

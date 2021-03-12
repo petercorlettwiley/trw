@@ -198,6 +198,34 @@ if ( ! function_exists( 'trw_show_media' ) ) :
 
 				if ( $type == 'image' ) {
 					$media_markup .= '<div class="media-item image" id="media-' . $number . '"><img src="' . $src . '" alt="' . $alt . '" width="' . $width . '" height="' . $height . '"><div class="media-counter rotate-90"><span>' . intval($number+1) . ' of ' . $media_count . '</span></div></div>';
+				} else if ( $type == 'video' ) {
+					$media_markup = <<<EOT
+<link
+  href="https://unpkg.com/video.js@7/dist/video-js.min.css"
+  rel="stylesheet"
+/> <!-- temp -->
+
+<video
+    id="my-video"
+    class="video-js"
+    controls
+    preload="auto"
+    width="{$width}"
+    height="{$width}"
+    poster=""
+    data-setup="{}"
+  >
+
+  <source src="{$src}" type="video/mp4" />
+
+  <p class="vjs-no-js">
+    To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a
+    >
+  </p>
+</video>
+
+EOT;
+
 				}
 			}
 		}

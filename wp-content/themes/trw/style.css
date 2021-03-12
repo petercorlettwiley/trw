@@ -1239,6 +1239,11 @@ body.single .media-nav a.prev:hover {
   display: inline-block;
 }
 
+video {
+  max-width: 100%;
+  height: auto;
+}
+
 /* Captions
 --------------------------------------------- */
 .wp-caption {
