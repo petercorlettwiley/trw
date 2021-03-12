@@ -830,14 +830,18 @@ body.about-open {
   left: calc(50% - 1px);
   width: 2px;
   background-color: #fff;
+  transition: all 1s ease-out;
+  transition-delay: 1s;
 }
 #about .about-content:before {
   top: 0;
   bottom: calc(50% + 2.5rem);
+  opacity: 1;
 }
 #about .about-content:after {
   top: calc(50% + 3rem);
   bottom: 0;
+  opacity: 1;
 }
 
 #about:not(.open) {
@@ -850,6 +854,17 @@ body.about-open {
   opacity: 0;
   transition-delay: 0;
   transition: all 0.3s;
+}
+#about:not(.open) .about-content:before, #about:not(.open) .about-content:after {
+  transition-delay: 0;
+}
+#about:not(.open) .about-content:before {
+  top: 50%;
+  opacity: 0;
+}
+#about:not(.open) .about-content:after {
+  bottom: 50%;
+  opacity: 0;
 }
 
 #aboutClose {
@@ -898,19 +913,26 @@ a#contact, a#instagram {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  opacity: 1;
+  transition: all 1s;
+  transition-delay: 2s;
 }
 a#contact:after, a#instagram:after {
   display: none;
 }
 
 a#contact {
-  color: #0000cc;
+  color: #00ccff;
   top: 6rem;
 }
 
 a#instagram {
   color: #f00;
   bottom: 6rem;
+}
+
+#about:not(.open) a#contact, #about:not(.open) a#instagram {
+  opacity: 0;
 }
 
 @media screen and (min-width: 800px) {
