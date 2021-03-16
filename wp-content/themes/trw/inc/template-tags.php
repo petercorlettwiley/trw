@@ -211,7 +211,7 @@ if ( ! function_exists( 'trw_show_media' ) ) :
     controls
     preload="auto"
     width="{$width}"
-    height="{$width}"
+    height="{$height}"
     poster=""
     data-setup="{}"
   >
