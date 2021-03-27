@@ -2,7 +2,9 @@ video {
   max-width: 100%;
   height: auto;
 }
-
+.media-item.video {
+  width: 100%;
+}
 /*
   Player Skin Designer for Video.js
   http://videojs.com
@@ -37,22 +39,36 @@ $center-big-play-button: true; // true default
      All dimensions use em-based sizes so that the scale along with the font size.
      Try increasing it to 15px and see what happens. */
   font-size: 10px;
+  font-family: $font__main;
 
   /* The main font color changes the ICON COLORS as well as the text */
   color: $primary-foreground-color;
 
+  width: 100% !important;
   height: auto !important;
 
   .vjs-tech {
+    position: static !important;
+    width: 100% !important;
     height: auto !important;
   }
+}
+
+.my-video-dimensions {
+  width: 100% !important;
+  height: auto !important;
+}
+
+.video-js:not(.my-video-dimensions) {
+  display: none !important;
 }
 
 /* The "Big Play Button" is the play button that shows before the video plays.
    To center it set the align values to center and middle. The typical location
    of the button is the center, but there is trend towards moving it to a corner
    where it gets out of the way of valuable content in the poster image.*/
-.vjs-default-skin .vjs-big-play-button {
+.vjs-default-skin .vjs-big-play-button,
+.video-js .vjs-big-play-button {
   /* The font size is what makes the big play button...big. 
      All width/height values use ems, which are a multiple of the font size.
      If the .video-js font-size is 10px, then 3em equals 30px.*/
@@ -77,10 +93,10 @@ $center-big-play-button: true; // true default
 
   @if $center-big-play-button {
     /* Align center */
-    left: 50%;
-    top: 50%;
-    margin-left: -($big-play-width / 2);
-    margin-top: -($big-play-height / 2);   
+    left: 50% !important;
+    top: 50% !important;
+    margin-left: -($big-play-width / 2) !important;
+    margin-top: -($big-play-height / 2) !important;   
   } @else {
     /* Align top left. 0.5em = 15px default */
     left: 0.5em;
@@ -97,6 +113,10 @@ $center-big-play-button: true; // true default
   background-color: $primary-background-color;
   /* Opacity: 1.0 = 100%, 0.0 = 0% */
   background-color: rgba($primary-background-color, 0.7);
+}
+
+.video-js .vjs-picture-in-picture-control {
+  display: none;
 }
 
 // Make a slightly lighter version of the main background

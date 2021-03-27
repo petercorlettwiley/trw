@@ -200,6 +200,8 @@ if ( ! function_exists( 'trw_show_media' ) ) :
 					$media_markup .= '<div class="media-item image" id="media-' . $number . '"><img src="' . $src . '" alt="' . $alt . '" width="' . $width . '" height="' . $height . '"><div class="media-counter rotate-90"><span>' . intval($number+1) . ' of ' . $media_count . '</span></div></div>';
 				} else if ( $type == 'video' ) {
 					$media_markup = <<<EOT
+<div class="media-item video" id="media-{$number}">
+
 <link
   href="https://unpkg.com/video.js@7/dist/video-js.min.css"
   rel="stylesheet"
@@ -209,6 +211,7 @@ if ( ! function_exists( 'trw_show_media' ) ) :
     id="my-video"
     class="video-js"
     controls
+    disablePictureInPicture
     preload="auto"
     width="{$width}"
     height="{$height}"
@@ -224,6 +227,7 @@ if ( ! function_exists( 'trw_show_media' ) ) :
   </p>
 </video>
 
+</div>
 EOT;
 
 				}
