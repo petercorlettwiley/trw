@@ -12,6 +12,7 @@ trw.sublime-workspace
 wp-content/themes/trw/config.codekit3
 wp-content/plugins/config.codekit3
 wp-content/ai1wm-backups/*
+wp-content/plugins/all-in-one-wp-migration/storage/index.html
 
 # wordpress specific
 wp-config.php
