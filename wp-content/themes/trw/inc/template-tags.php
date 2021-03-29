@@ -199,6 +199,7 @@ if ( ! function_exists( 'trw_show_media' ) ) :
 				if ( $type == 'image' ) {
 					$media_markup .= '<div class="media-item image" id="media-' . $number . '"><img src="' . $src . '" alt="' . $alt . '" width="' . $width . '" height="' . $height . '"><div class="media-counter rotate-90"><span>' . intval($number+1) . ' of ' . $media_count . '</span></div></div>';
 				} else if ( $type == 'video' ) {
+					$poster_image = get_field('poster_image', $media_item['ID']);
 					$media_markup = <<<EOT
 <div class="media-item video" id="media-{$number}">
 
@@ -215,7 +216,7 @@ if ( ! function_exists( 'trw_show_media' ) ) :
     preload="auto"
     width="{$width}"
     height="{$height}"
-    poster=""
+    poster="{$poster_image['url']}"
     data-setup="{}"
   >
 

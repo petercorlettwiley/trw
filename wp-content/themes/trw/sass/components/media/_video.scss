@@ -104,6 +104,34 @@ $center-big-play-button: true; // true default
   }
 }
 
+.video-js .vjs-poster {
+  display: inline-block; 
+  vertical-align: middle;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: contain;
+  background-color: #000;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  bottom: -1px;
+  left: -1px;
+  height: 100%;
+}
+
+.video-js {
+  opacity: 0;
+  transition: all 0.2s;
+}
+
+.video-js.player-loaded {
+  opacity: 1;
+}
+
+
 /* The default color of control backgrounds is mostly black but with a little
    bit of blue so it can still be seen on all-black video frames, which are common. */
 .video-js .vjs-control-bar,
