@@ -1,32 +1,34 @@
 /* global jQuery */
 
 /**
- * File image-load.js.
+ * File video-load.js.
  *
- * @link https://stackoverflow.com/questions/9845774/fade-in-images-after-they-have-loaded
  */
 ( function( $ ) {
 
-if(videojs) {
-
   setTimeout(function() { 
-
-    var player = videojs('my-video');
   
-    if (player) {
+    var videos = Object.keys(videojs.getPlayers()).length;
     
-      player.ready(function() {
-        var img = new Image();
-        img.src = player.getAttribute('poster');
-        img.onload = function(){
-          player.addClass('player-loaded');
-        }
-      });
+    if (videos > 0) {
+  
+      var player = videojs('my-video');
+  
     
-    } else {
-      return;
+      if (player) {
+      
+        player.ready(function() {
+          var img = new Image();
+          img.src = player.getAttribute('poster');
+          img.onload = function(){
+            player.addClass('player-loaded');
+          }
+        });
+      
+      } else {
+        return;
+      }
     }
-  }, 1000);
-}
+  }, 2000);
 
 }( jQuery ) );
