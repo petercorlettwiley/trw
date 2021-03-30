@@ -7,17 +7,26 @@
  */
 ( function( $ ) {
 
-var player = videojs('my-video');
+if(videojs) {
 
-player.on('ready', function() {
-  var img = new Image();
-  img.src = player.getAttribute('poster');
-  img.onload = function(){
-    player.addClass('player-loaded');
-  }
-});
+  setTimeout(function() { 
 
-//snippet.log('before:  '+video.getBoundingClientRect().width);
-
+    var player = videojs('my-video');
+  
+    if (player) {
+    
+      player.ready(function() {
+        var img = new Image();
+        img.src = player.getAttribute('poster');
+        img.onload = function(){
+          player.addClass('player-loaded');
+        }
+      });
+    
+    } else {
+      return;
+    }
+  }, 1000);
+}
 
 }( jQuery ) );
