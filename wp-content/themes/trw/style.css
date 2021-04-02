@@ -1057,7 +1057,7 @@ body.single .post-text-wrap header:after {
   background-color: #000;
   animation-name: underline-motion-ltr-reverse;
   animation-duration: 2s;
-  animation-delay: 2s;
+  animation-delay: 0s;
   animation-iteration-count: 1;
 }
 body.single .post-text-wrap h1 {

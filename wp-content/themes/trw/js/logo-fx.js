@@ -3,7 +3,7 @@
  *
  */
  
-const svg = document.getElementById('Layer_1')
+const svg = document.getElementById('logo-shadow')
 const warp = new Warp(svg)
 
 warp.interpolate(4)
