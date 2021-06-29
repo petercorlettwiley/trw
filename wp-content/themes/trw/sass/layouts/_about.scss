@@ -39,7 +39,7 @@ body.about-open {
       content: '';
       position: absolute;
       left: calc(50% - 1px);
-      width: 2px;
+      width: 1px;
       background-color: $color__white;
       transition: all 1s ease-out;
       transition-delay: 1s;

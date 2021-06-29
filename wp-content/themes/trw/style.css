@@ -833,7 +833,7 @@ body.about-open {
   content: "";
   position: absolute;
   left: calc(50% - 1px);
-  width: 2px;
+  width: 1px;
   background-color: #fff;
   transition: all 1s ease-out;
   transition-delay: 1s;
