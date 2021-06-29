@@ -18,7 +18,7 @@ const $galleryItem = $gallery.find('.media-item');
 $galleryItem.each(function() {
 
   const $image = $(this).find('img');
-  const $text = $(this).find('.media-counter');
+  const $text = $(this).find('.media-counter:not(.stuck)');
 
   //check all images on the page
   $image.each(function(){

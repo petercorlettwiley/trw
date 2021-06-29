@@ -204,6 +204,16 @@ body.single {
             transform: rotate(-90deg);
             display: inline-block;  
           }
+
+          &.stuck {
+            position: fixed;
+            bottom: 6rem;
+            right: $size__unit-horizontal-full - 0.25rem;
+
+            span {
+              transform-origin: 100% 100%;
+            }
+          }
         }
       }
     }

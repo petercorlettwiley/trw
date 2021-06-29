@@ -1187,6 +1187,14 @@ body.single .media-nav a.prev:hover {
     transform: rotate(-90deg);
     display: inline-block;
   }
+  body.single .entry-media .media-item .rotate-90.stuck {
+    position: fixed;
+    bottom: 6rem;
+    right: 3.75rem;
+  }
+  body.single .entry-media .media-item .rotate-90.stuck span {
+    transform-origin: 100% 100%;
+  }
   body.single .navigation.post-navigation .nav-links div a {
     transform: rotate(-90deg);
     display: inline-block;

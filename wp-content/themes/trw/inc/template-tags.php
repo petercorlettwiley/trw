@@ -197,7 +197,7 @@ if ( ! function_exists( 'trw_show_media' ) ) :
 				$number = $media_number;
 
 				if ( $type == 'image' ) {
-					$media_markup .= '<div class="media-item image" id="media-' . $number . '"><img src="' . $src . '" alt="' . $alt . '" width="' . $width . '" height="' . $height . '"><div class="media-counter rotate-90"><span>' . intval($number+1) . ' of ' . $media_count . '</span></div></div>';
+					$media_markup .= '<div class="media-item image" id="media-' . $number . '"><img src="' . $src . '" alt="' . $alt . '" width="' . $width . '" height="' . $height . '"><div class="media-counter rotate-90 stuck"><span>' . intval($number+1) . ' of ' . $media_count . '</span></div></div>';
 				} else if ( $type == 'video' ) {
 					$poster_image = get_field('poster_image', $media_item['ID']);
 					$media_markup = <<<EOT

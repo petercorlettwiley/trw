@@ -101,7 +101,11 @@ function nextSlide() {
   // show 'next project' button
   if ( index == $galleryItem.length-1 ) {
     $('.nav-previous').fadeIn();
+    $('.media-counter.stuck').fadeOut();
     return;
+
+  } else {
+    $('.media-counter.stuck').fadeIn();
   }
 
   // remove previous index
@@ -138,7 +142,7 @@ function prevSlide() {
 
   // hide 'next project' button
   if ( index < $galleryItem.length ) {
-    $('.nav-previous').fadeOut();
+    $('.nav-previous').fadeOut(400, function() { $('.media-counter.stuck').fadeIn(); });
   }
 
   // remove previous index
