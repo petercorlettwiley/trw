@@ -25,6 +25,7 @@ const scrollTimerReset = 500;
 const animationSpeed = 500;
 var scrollTimer = null;
 var scrolling = false;
+var switchScrolling = false;
 
 window.addEventListener('wheel', function(event) {
   scrollDelta.x = event.deltaX;
@@ -183,17 +184,13 @@ function changeSwitchIndex( dir ) {
     switchIndex = $galleryItem.length-1;
   }
 
-  if ( switchIndex > $galleryItem.length ) {
-    scrolling = true;
+  if ( switchIndex > $galleryItem.length && !switchScrolling ) {
+    switchScrolling = true;
 
-    $('.nav-previous').fadeOut(400, function() {
-      console.log('YOOO');
-      $scrolling = false;
-
+    $('main#primary').css({position: 'relative'}).animate({left: '-=33%', opacity: 0}, animationSpeed, function() {
+      $('.nav-previous a')[0].click();
     });
   }
-
-  console.log(switchIndex);
 }
 
 }( jQuery ) );
