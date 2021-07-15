@@ -73,19 +73,6 @@ body.about-open #masthead .main-navigation ul li a {
 	}
 }
 
-body {
-	#masthead {
-		opacity: 0;
-		transition: $transition__standard;
-	}
-
-	&.loaded {
-		#masthead {
-			opacity: 1;
-		}
-	}
-}
-
 @media screen and (min-width: $breakpoint__mobile) {
 	#masthead {
 		margin: 0;

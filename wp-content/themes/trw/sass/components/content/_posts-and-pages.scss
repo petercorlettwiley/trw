@@ -136,16 +136,12 @@ body.single {
   }
 }
 
-body.single {
-  .post-text-wrap {
-    opacity: 0;
-    transition: $transition__standard;
-  }
-
+body {
+  opacity: 0;
+  transition: $transition__standard;
+  
   &.loaded {
-    .post-text-wrap {
-      opacity: 1;
-    }
+    opacity: 1;
   }
 }
 

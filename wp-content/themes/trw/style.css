@@ -1009,14 +1009,6 @@ body.about-open #masthead .main-navigation ul li a:after {
   opacity: 1;
 }
 
-body #masthead {
-  opacity: 0;
-  transition: all 0.3s;
-}
-body.loaded #masthead {
-  opacity: 1;
-}
-
 @media screen and (min-width: 800px) {
   #masthead {
     margin: 0;
@@ -1144,11 +1136,11 @@ body.single .media-nav a.prev:hover {
   left: -0.25rem;
 }
 
-body.single .post-text-wrap {
+body {
   opacity: 0;
   transition: all 0.3s;
 }
-body.single.loaded .post-text-wrap {
+body.loaded {
   opacity: 1;
 }
 
