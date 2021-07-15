@@ -188,7 +188,8 @@ function changeSwitchIndex( dir ) {
     switchScrolling = true;
 
     $('main#primary').css({position: 'relative'}).animate({left: '-=33%', opacity: 0}, animationSpeed, function() {
-      $('.nav-previous a')[0].click();
+      $('body').removeClass('loaded');
+      setTimeout( function(){ $('.nav-previous a')[0].click();}, 300);
     });
   }
 }

@@ -135,7 +135,19 @@ body.single {
     }
   }
 }
-    
+
+body.single {
+  .post-text-wrap {
+    opacity: 0;
+    transition: $transition__standard;
+  }
+
+  &.loaded {
+    .post-text-wrap {
+      opacity: 1;
+    }
+  }
+}
 
 @media screen and (min-width: $breakpoint__mobile) {
 

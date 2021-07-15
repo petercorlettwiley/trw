@@ -149,6 +149,8 @@ function trw_scripts() {
 
 	wp_enqueue_script( 'trw-video-load', get_template_directory_uri() . '/js/video-load.js', array( 'jquery' ), _S_VERSION, true );
 
+		wp_enqueue_script( 'trw-content-load', get_template_directory_uri() . '/js/content-load.js', array( 'jquery' ), _S_VERSION, true );
+
 	wp_enqueue_script( 'trw-gallery', get_template_directory_uri() . '/js/gallery.js', array( 'jquery' ), _S_VERSION, true );
 
 	wp_enqueue_script( 'trw-gallery-text-position', get_template_directory_uri() . '/js/gallery-text-position.js', array( 'jquery' ), _S_VERSION, true );
