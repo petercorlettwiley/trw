@@ -29,7 +29,7 @@ $primary-foreground-color: #fff; // #fff default
 // The default color of control backgrounds is mostly black but with a little
 // bit of blue so it can still be seen on all-black video frames, which are common.
 // Try changing to #900
-$primary-background-color: #2B333F;  // #2B333F default
+$primary-background-color: $color__black;  // #2B333F default
 
 // Try changing to true
 $center-big-play-button: true; // true default
@@ -138,9 +138,14 @@ $center-big-play-button: true; // true default
 .video-js .vjs-big-play-button,
 .video-js .vjs-menu-button .vjs-menu-content {
   /* IE8 - has no alpha support */
-  background-color: $primary-background-color;
+  background-color: $primary-background-color !important;
   /* Opacity: 1.0 = 100%, 0.0 = 0% */
-  background-color: rgba($primary-background-color, 0.7);
+  background-color: rgba($primary-background-color, 0.5) !important;
+}
+
+.video-js .vjs-big-play-button {
+  background-color: transparent !important;
+  border: 0 !important;
 }
 
 .video-js .vjs-picture-in-picture-control {
