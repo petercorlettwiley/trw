@@ -59,4 +59,22 @@ function closeAboutPage() {
   }
 }
 
+var $lineStyles = '<style id="lineStyles"></style>';
+
+function adjustAboutLines() {
+  const $aboutParagraph = $('#about .about-content p');
+  const $bottom = $aboutParagraph.outerHeight() * 4/5;
+  const $top = $aboutParagraph.outerHeight() * 4/5 + 4;
+  $('#lineStyles').text('#about .about-content:before { bottom: calc(50% + ' + $bottom + 'px); } #about .about-content:after { top: calc(50% + ' + $top + 'px); }');
+}
+
+$(window).on('resize', function () {
+  adjustAboutLines();
+});
+
+$(window).on('load', function(){
+  $('head').append($lineStyles);
+  adjustAboutLines();
+});
+
 }( jQuery ) );
