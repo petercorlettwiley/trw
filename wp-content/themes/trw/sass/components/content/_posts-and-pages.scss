@@ -40,7 +40,14 @@ body.single {
     }
   }
 
+  main {
+    position: relative;
+  }
+
   .navigation.post-navigation {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
     padding: 0 $size__unit-header-offset-horizontal $size__unit-header-offset-vertical;
     
     .nav-links {
@@ -79,16 +86,25 @@ body.single {
     box-sizing: border-box;
     padding: 0 $size__unit-header-offset-horizontal;
     display: flex;
+    justify-content: center;
     position: relative;
     overflow: hidden;
     margin-top: 4rem;
-    max-height: 50vh;
+    max-height: 75vh;
 
     .media-item {
       height: 100%;
 
       .rotate-90 {
         text-align: center;
+      }
+
+      &:first-child {
+        .rotate-90 {
+          position: absolute;
+          right: $size__unit-horizontal;
+          bottom: $size__unit-vertical;
+        }
       }
     }
 
@@ -179,7 +195,6 @@ body {
       margin-top: 0;
       max-height: unset;
       display: flex;
-      justify-content: center;
       position: relative;
       //overflow: hidden;
 
@@ -207,6 +222,7 @@ body {
         .rotate-90 {
           position: absolute;
           bottom: 1em;
+          right: unset;
           text-align: unset;
 
           span {

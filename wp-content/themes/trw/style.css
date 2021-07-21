@@ -1063,7 +1063,13 @@ body.single .post-text-wrap header:after {
 body.single .post-text-wrap h1 {
   margin: 0;
 }
+body.single main {
+  position: relative;
+}
 body.single .navigation.post-navigation {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
   padding: 0 1.5rem 1rem;
 }
 body.single .navigation.post-navigation .nav-links {
@@ -1089,16 +1095,22 @@ body.single .entry-media {
   box-sizing: border-box;
   padding: 0 1.5rem;
   display: flex;
+  justify-content: center;
   position: relative;
   overflow: hidden;
   margin-top: 4rem;
-  max-height: 50vh;
+  max-height: 75vh;
 }
 body.single .entry-media .media-item {
   height: 100%;
 }
 body.single .entry-media .media-item .rotate-90 {
   text-align: center;
+}
+body.single .entry-media .media-item:first-child .rotate-90 {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1rem;
 }
 body.single .entry-media .media-counter {
   font-size: 0.875rem;
@@ -1166,7 +1178,6 @@ body.loaded {
     margin-top: 0;
     max-height: unset;
     display: flex;
-    justify-content: center;
     position: relative;
   }
   body.single .entry-media .media-gallery {
@@ -1190,6 +1201,7 @@ body.loaded {
   body.single .entry-media .media-item .rotate-90 {
     position: absolute;
     bottom: 1em;
+    right: unset;
     text-align: unset;
   }
   body.single .entry-media .media-item .rotate-90 span {

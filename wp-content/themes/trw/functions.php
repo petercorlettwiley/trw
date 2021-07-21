@@ -155,6 +155,8 @@ function trw_scripts() {
 
 	wp_enqueue_script( 'trw-gallery-text-position', get_template_directory_uri() . '/js/gallery-text-position.js', array( 'jquery' ), _S_VERSION, true );
 
+	wp_enqueue_script( 'trw-gallery-mobile', get_template_directory_uri() . '/js/gallery-mobile.js', array( 'jquery' ), _S_VERSION, true );
+
 	wp_enqueue_script( 'trw-about', get_template_directory_uri() . '/js/about.js', array( 'jquery' ), _S_VERSION, true );
 
 	wp_enqueue_script( 'trw-warp', get_template_directory_uri() . '/js/warp.js', array( ), _S_VERSION, true );
