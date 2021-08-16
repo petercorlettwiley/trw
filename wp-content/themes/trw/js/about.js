@@ -12,6 +12,7 @@ const $aboutPage = $('#about');
 const $aboutClose = $('#aboutClose');
 const $aboutContent = $('#about a, #about .about-content');
 const $body = $('body');
+const mobileBreak = 800;
 
 if ( $aboutLink.length == 0 || $aboutPage.length == 0 || $aboutContent.length == 0 || $aboutClose.length == 0) {
   return;
@@ -63,8 +64,13 @@ var $lineStyles = '<style id="lineStyles"></style>';
 
 function adjustAboutLines() {
   const $aboutParagraph = $('#about .about-content p');
-  const $bottom = $aboutParagraph.outerHeight() * 4/5;
-  const $top = $aboutParagraph.outerHeight() * 4/5 + 4;
+  var $mobileAdjust = 35;
+
+  if ($(window).outerWidth() >= mobileBreak) {
+    $mobileAdjust = 0;
+  }
+  const $bottom = $aboutParagraph.outerHeight() * 4/5 - $mobileAdjust;
+  const $top = $aboutParagraph.outerHeight() * 4/5 + 4 - $mobileAdjust;
   $('#lineStyles').text('#about .about-content:before { bottom: calc(50% + ' + $bottom + 'px); } #about .about-content:after { top: calc(50% + ' + $top + 'px); }');
 }
 

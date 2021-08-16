@@ -46,14 +46,14 @@ body.about-open {
     }
 
     &:before {
-      top: 0;
+      top: 1rem;
       bottom: calc(50% + 2.5rem);
       opacity: 1;
     }
 
     &:after {
       top: calc(50% + 3rem);
-      bottom: 0;
+      bottom: 1rem;
       opacity: 1;
     }
   }
@@ -149,12 +149,12 @@ a#contact, a#instagram {
 
 a#contact {
   color: $color__blue;
-  top: 6rem;
+  top: 5rem;
 }
 
 a#instagram {
   color: $color__red;
-  bottom: 6rem;
+  bottom: 5rem;
 }
 
 #about:not(.open) {
@@ -167,5 +167,25 @@ a#instagram {
   #aboutClose {
     top: $size__unit-header-offset-vertical-full;
     right: $size__unit-header-offset-horizontal-full;
+  }
+
+  a#contact {
+    top: 6rem;
+  }
+  
+  a#instagram {
+    bottom: 6rem;
+  }
+
+  #about {
+    .about-content {
+      &:before {
+        top: 0;
+      }
+  
+      &:after {
+        bottom: 0;
+      }
+    }
   }
 }

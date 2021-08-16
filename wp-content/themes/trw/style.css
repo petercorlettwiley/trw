@@ -839,13 +839,13 @@ body.about-open {
   transition-delay: 1s;
 }
 #about .about-content:before {
-  top: 0;
+  top: 1rem;
   bottom: calc(50% + 2.5rem);
   opacity: 1;
 }
 #about .about-content:after {
   top: calc(50% + 3rem);
-  bottom: 0;
+  bottom: 1rem;
   opacity: 1;
 }
 
@@ -928,12 +928,12 @@ a#contact:after, a#instagram:after {
 
 a#contact {
   color: #00ccff;
-  top: 6rem;
+  top: 5rem;
 }
 
 a#instagram {
   color: #f00;
-  bottom: 6rem;
+  bottom: 5rem;
 }
 
 #about:not(.open) a#contact, #about:not(.open) a#instagram {
@@ -944,6 +944,21 @@ a#instagram {
   #aboutClose {
     top: 1.5rem;
     right: 4rem;
+  }
+
+  a#contact {
+    top: 6rem;
+  }
+
+  a#instagram {
+    bottom: 6rem;
+  }
+
+  #about .about-content:before {
+    top: 0;
+  }
+  #about .about-content:after {
+    bottom: 0;
   }
 }
 /*--------------------------------------------------------------
