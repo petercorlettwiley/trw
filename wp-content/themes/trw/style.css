@@ -837,6 +837,7 @@ body.about-open {
   background-color: #fff;
   transition: all 1s ease-out;
   transition-delay: 1s;
+  display: none;
 }
 #about .about-content:before {
   top: 1rem;
@@ -956,9 +957,11 @@ a#instagram {
 
   #about .about-content:before {
     top: 0;
+    display: block;
   }
   #about .about-content:after {
     bottom: 0;
+    display: block;
   }
 }
 /*--------------------------------------------------------------

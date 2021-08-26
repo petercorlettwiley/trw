@@ -43,6 +43,7 @@ body.about-open {
       background-color: $color__white;
       transition: all 1s ease-out;
       transition-delay: 1s;
+      display: none;
     }
 
     &:before {
@@ -181,10 +182,12 @@ a#instagram {
     .about-content {
       &:before {
         top: 0;
+        display: block;
       }
   
       &:after {
         bottom: 0;
+        display: block;
       }
     }
   }
