@@ -273,7 +273,7 @@ if ( ! function_exists( 'trw_get_about' ) ) :
 			<?php echo $about_content; ?>
 		</div>
 
-		<a href="mailto:<?php echo $instagram_link; ?>" id="instagram">instagram</a>
+		<a href="<?php echo $instagram_link; ?>" id="instagram" target="_blank">instagram</a>
 
 		<?php
 	}
