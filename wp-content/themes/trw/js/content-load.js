@@ -12,7 +12,7 @@
 
   // clicking to new page and 'unloading' old page
 
-  var $links = $('a:not([href*="#"])');
+  var $links = $('a:not([href*="#"]):not[target="_blank"]');
 
   $links.each(function(){
     let href = $(this).attr('href');
