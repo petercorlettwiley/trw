@@ -6,12 +6,13 @@
  * Recommendation Order: 7
  * First Introduced: 2.0
  * Requires Connection: Yes
+ * Requires User Connection: Yes
  * Auto Activate: No
  * Module Tags: Social, Recommended
  * Feature: Engagement
  * Additional Search Queries: facebook, jetpack publicize, twitter, tumblr, linkedin, social, tweet, connections, sharing, social media, automated, automated sharing, auto publish, auto tweet and like, auto tweet, facebook auto post, facebook posting
  *
- * @package Jetpack.
+ * @package automattic/jetpack
  */
 
 /**
@@ -36,23 +37,19 @@ class Jetpack_Publicize {
 
 		if ( $this->in_jetpack ) {
 			Jetpack::enable_module_configurable( __FILE__ );
-		}
 
-		require_once __DIR__ . '/publicize/publicize.php';
+			add_action(
+				'jetpack_register_gutenberg_extensions',
+				function () {
+					global $publicize;
+					if ( $publicize->current_user_can_access_publicize_data() ) {
+						Jetpack_Gutenberg::set_extension_available( 'jetpack/publicize' );
+					} else {
+						Jetpack_Gutenberg::set_extension_unavailable( 'jetpack/publicize', 'unauthorized' );
+					}
+				}
+			);
 
-		if ( $this->in_jetpack ) {
-			require_once __DIR__ . '/publicize/publicize-jetpack.php';
-		} else {
-			require_once dirname( __DIR__ ) . '/mu-plugins/keyring/keyring.php';
-			require_once __DIR__ . '/publicize/publicize-wpcom.php';
-		}
-
-		require_once __DIR__ . '/publicize/ui.php';
-		$publicize_ui             = new Publicize_UI();
-		$publicize_ui->in_jetpack = $this->in_jetpack;
-
-		// Jetpack specific checks / hooks.
-		if ( $this->in_jetpack ) {
 			// if sharedaddy isn't active, the sharing menu hasn't been added yet.
 			$active = Jetpack::get_active_modules();
 			if ( in_array( 'publicize', $active, true ) && ! in_array( 'sharedaddy', $active, true ) ) {
@@ -92,7 +89,16 @@ class Jetpack_Publicize {
 					}
 				}
 			);
+		} else {
+			require_once __DIR__ . '/publicize/publicize.php';
+			require_once dirname( __DIR__ ) . '/mu-plugins/keyring/keyring.php';
+			require_once __DIR__ . '/publicize/publicize-wpcom.php';
+			require_once __DIR__ . '/publicize/ui.php';
+			$publicize_ui = new Publicize_UI();
 		}
+
+		$publicize_ui->in_jetpack = $this->in_jetpack;
+
 	}
 }
 
@@ -109,10 +115,6 @@ if ( ! ( defined( 'IS_WPCOM' ) && IS_WPCOM ) && ! function_exists( 'publicize_in
 	 */
 	function publicize_init() {
 		global $publicize;
-
-		if ( ! class_exists( 'Publicize' ) ) {
-			require_once __DIR__ . '/publicize/publicize.php';
-		}
 
 		return $publicize;
 	}

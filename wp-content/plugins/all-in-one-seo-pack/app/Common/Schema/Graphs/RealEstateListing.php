@@ -12,7 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 4.0.0
  */
 class RealEstateListing extends WebPage {
-
 	/**
 	 * The graph type.
 	 *
@@ -37,6 +36,7 @@ class RealEstateListing extends WebPage {
 		}
 
 		$data['datePosted'] = mysql2date( DATE_W3C, $post->post_date_gmt, false );
+
 		return $data;
 	}
 }

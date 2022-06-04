@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	}
 	?>
 	<url>
-		<loc<?php echo ! empty( $entry['language'] ) ? ' language="' . $entry['language'] . '"' : ''; ?>><?php aioseo()->sitemap->output->escapeAndEcho( $entry['loc'] ); ?></loc><?php
+		<loc><?php aioseo()->sitemap->output->escapeAndEcho( $entry['loc'] ); ?></loc><?php
 	if ( array_key_exists( 'languages', $entry ) && count( $entry['languages'] ) ) {
 			foreach ( $entry['languages'] as $language ) {
 			?>

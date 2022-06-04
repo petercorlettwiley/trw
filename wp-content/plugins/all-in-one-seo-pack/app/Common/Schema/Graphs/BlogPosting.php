@@ -12,7 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 4.0.0
  */
 class BlogPosting extends Article {
-
 	/**
 	 * Returns the graph data.
 	 *
@@ -28,6 +27,7 @@ class BlogPosting extends Article {
 
 		$data['@type'] = 'BlogPosting';
 		$data['@id']   = aioseo()->schema->context['url'] . '#blogposting';
+
 		return $data;
 	}
 }

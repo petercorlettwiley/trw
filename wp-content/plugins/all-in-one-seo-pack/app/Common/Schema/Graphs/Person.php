@@ -14,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 4.0.0
  */
 class Person extends Graph {
-
 	/**
 	 * Returns the graph data.
 	 *
@@ -52,6 +51,7 @@ class Person extends Graph {
 		if ( $socialUrls ) {
 			$data['sameAs'] = $socialUrls;
 		}
+
 		return $data;
 	}
 
@@ -78,6 +78,7 @@ class Person extends Graph {
 		if ( $socialUrls ) {
 			$data['sameAs'] = $socialUrls;
 		}
+
 		return $data;
 	}
 }

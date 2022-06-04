@@ -16,7 +16,7 @@ class MonsterInsightsHeadlineToolPlugin{
 	/**
 	 * Class Variables.
 	 */
-	private $emotion_power_words2 = array();
+	private $emotion_power_words = array();
 	private $power_words = array();
 	private $common_words = array();
 	private $uncommon_words = array();
@@ -28,18 +28,6 @@ class MonsterInsightsHeadlineToolPlugin{
 	 */
 	function __construct() {
 		$this->init();
-
-		// Emotion words - 10–15% Density
-		$this->emotion_power_words2 = $this->emotion_power_words();
-
-		// Power words - atleast 1
-		$this->power_words = $this->power_words();
-
-		// Common words - 20-30% of headline
-		$this->common_words = $this->common_words();
-
-		// Un-Common words - 10-20% of headline
-		$this->uncommon_words = $this->uncommon_words();
 	}
 
 	/**
@@ -64,8 +52,8 @@ class MonsterInsightsHeadlineToolPlugin{
 			);
 		}
 
-  	    // get whether or not the website is up
-  	    $result = $this->get_headline_scores();
+		// get whether or not the website is up
+		$result = $this->get_headline_scores();
 
 		if ( !empty( $result->err ) ) {
 			$content = self::output_template( 'results-error.php', $result );
@@ -76,12 +64,12 @@ class MonsterInsightsHeadlineToolPlugin{
 
 			// send the response
 			wp_send_json_success(
-					array(
-						'result' => $result,
-						'analysed' => !$result->err,
-						'sentence' => ucwords( wp_unslash( sanitize_text_field( $_REQUEST['q'] ) ) ),
-						'score' => ( isset( $result->score ) && ! empty( $result->score ) ) ? $result->score : 0
-					)
+				array(
+					'result' => $result,
+					'analysed' => !$result->err,
+					'sentence' => ucwords( wp_unslash( sanitize_text_field( $_REQUEST['q'] ) ) ),
+					'score' => ( isset( $result->score ) && ! empty( $result->score ) ) ? $result->score : 0
+				)
 			);
 
 		}
@@ -132,11 +120,11 @@ class MonsterInsightsHeadlineToolPlugin{
 
 		$result->input = $input;
 
-  	    // bad input
+		// bad input
 		if ( ! $input || $input == ' ' || trim( $input ) == '' ) {
-				$result->err = true;
-				$result->msg = __('Bad Input', 'google-analytics-for-wordpress');
-				return $result;
+			$result->err = true;
+			$result->msg = __('Bad Input', 'google-analytics-for-wordpress');
+			return $result;
 		}
 
 		// overall score;
@@ -171,13 +159,13 @@ class MonsterInsightsHeadlineToolPlugin{
 		elseif ( $result->word_count >= 12 ) { $scoret += 5; }
 
 		// Calculate word match counts
-		$result->power_words = $this->match_words( $result->input, $result->input_array, $this->power_words );
+		$result->power_words = $this->match_words( $result->input, $result->input_array, $this->power_words() );
 		$result->power_words_per = count( $result->power_words ) / $result->word_count;
-		$result->emotion_words = $this->match_words( $result->input, $result->input_array, $this->emotion_power_words2 );
+		$result->emotion_words = $this->match_words( $result->input, $result->input_array, $this->emotion_power_words() );
 		$result->emotion_words_per = count( $result->emotion_words ) / $result->word_count;
-		$result->common_words = $this->match_words( $result->input, $result->input_array, $this->common_words );
+		$result->common_words = $this->match_words( $result->input, $result->input_array, $this->common_words() );
 		$result->common_words_per = count( $result->common_words ) / $result->word_count;
-		$result->uncommon_words = $this->match_words( $result->input, $result->input_array, $this->uncommon_words );
+		$result->uncommon_words = $this->match_words( $result->input, $result->input_array, $this->uncommon_words() );
 		$result->uncommon_words_per = count( $result->uncommon_words ) / $result->word_count;
 		$result->word_balance = __('Can Be Improved', 'google-analytics-for-wordpress');
 		$result->word_balance_use = array();
@@ -223,7 +211,7 @@ class MonsterInsightsHeadlineToolPlugin{
 		$class_senti = $sentiment->categorise( $input );
 		$result->sentiment = $class_senti;
 
-		$scoret = $scoret + ( $result->sentiment == 'pos' ? 10 : ( $result->sentiment == 'neg' ? 10 : 7 ) );
+		$scoret = $scoret + ( $result->sentiment === 'pos' ? 10 : ( $result->sentiment === 'neg' ? 10 : 7 ) );
 
 		// Headline types
 		$headline_types = array();
@@ -306,7 +294,7 @@ class MonsterInsightsHeadlineToolPlugin{
 		// put to result
 		$result->headline_types = $headline_types;
 
-        // Resources for more reading:
+		// Resources for more reading:
 		// https://kopywritingkourse.com/copywriting-headlines-that-sell/
 		// How To _______ That Will Help You ______
 		// https://coschedule.com/blog/how-to-write-the-best-headlines-that-will-increase-traffic/
@@ -363,7 +351,11 @@ class MonsterInsightsHeadlineToolPlugin{
 	 * @return array emotional power words
 	 */
 	function emotion_power_words() {
-		return array(
+		if ( isset( $this->emotion_power_words ) && ! empty( $this->emotion_power_words ) ) {
+			return $this->emotion_power_words;
+		}
+
+		$this->emotion_power_words = array(
 			__("destroy", "google-analytics-for-wordpress"),
 			__("extra", "google-analytics-for-wordpress"),
 			__("in a", "google-analytics-for-wordpress"),
@@ -393,17 +385,17 @@ class MonsterInsightsHeadlineToolPlugin{
 			__("feeble", "google-analytics-for-wordpress"),
 			__("gullible", "google-analytics-for-wordpress"),
 			__("double", "google-analytics-for-wordpress"),
-			__("ﬁre", "google-analytics-for-wordpress"),
+			__("fire", "google-analytics-for-wordpress"),
 			__("hack", "google-analytics-for-wordpress"),
-			__("ﬂeece", "google-analytics-for-wordpress"),
+			__("fleece", "google-analytics-for-wordpress"),
 			__("had enough", "google-analytics-for-wordpress"),
 			__("invasion", "google-analytics-for-wordpress"),
 			__("drowning", "google-analytics-for-wordpress"),
-			__("ﬂoundering", "google-analytics-for-wordpress"),
+			__("floundering", "google-analytics-for-wordpress"),
 			__("happy", "google-analytics-for-wordpress"),
 			__("ironclad", "google-analytics-for-wordpress"),
 			__("dumb", "google-analytics-for-wordpress"),
-			__("ﬂush", "google-analytics-for-wordpress"),
+			__("flush", "google-analytics-for-wordpress"),
 			__("hate", "google-analytics-for-wordpress"),
 			__("irresistibly", "google-analytics-for-wordpress"),
 			__("hazardous", "google-analytics-for-wordpress"),
@@ -414,7 +406,7 @@ class MonsterInsightsHeadlineToolPlugin{
 			__("helpless", "google-analytics-for-wordpress"),
 			__("it looks like a", "google-analytics-for-wordpress"),
 			__("embarrass", "google-analytics-for-wordpress"),
-			__("for the ﬁrst time", "google-analytics-for-wordpress"),
+			__("for the first time", "google-analytics-for-wordpress"),
 			__("help are the", "google-analytics-for-wordpress"),
 			__("jackpot", "google-analytics-for-wordpress"),
 			__("forbidden", "google-analytics-for-wordpress"),
@@ -433,7 +425,7 @@ class MonsterInsightsHeadlineToolPlugin{
 			__("hope", "google-analytics-for-wordpress"),
 			__("killer", "google-analytics-for-wordpress"),
 			__("frantic", "google-analytics-for-wordpress"),
-			__("horriﬁc", "google-analytics-for-wordpress"),
+			__("horrific", "google-analytics-for-wordpress"),
 			__("know it all", "google-analytics-for-wordpress"),
 			__("epic", "google-analytics-for-wordpress"),
 			__("how to make", "google-analytics-for-wordpress"),
@@ -448,7 +440,7 @@ class MonsterInsightsHeadlineToolPlugin{
 			__("lawsuit", "google-analytics-for-wordpress"),
 			__("frugal", "google-analytics-for-wordpress"),
 			__("illegal", "google-analytics-for-wordpress"),
-			__("fulﬁll", "google-analytics-for-wordpress"),
+			__("fulfill", "google-analytics-for-wordpress"),
 			__("lick", "google-analytics-for-wordpress"),
 			__("explode", "google-analytics-for-wordpress"),
 			__("lies", "google-analytics-for-wordpress"),
@@ -488,7 +480,7 @@ class MonsterInsightsHeadlineToolPlugin{
 			__("official", "google-analytics-for-wordpress"),
 			__("luxurious", "google-analytics-for-wordpress"),
 			__("on the", "google-analytics-for-wordpress"),
-			__("proﬁt", "google-analytics-for-wordpress"),
+			__("profit", "google-analytics-for-wordpress"),
 			__("scary", "google-analytics-for-wordpress"),
 			__("lying", "google-analytics-for-wordpress"),
 			__("outlawed", "google-analytics-for-wordpress"),
@@ -544,7 +536,7 @@ class MonsterInsightsHeadlineToolPlugin{
 			__("myths", "google-analytics-for-wordpress"),
 			__("poor", "google-analytics-for-wordpress"),
 			__("remarkably", "google-analytics-for-wordpress"),
-			__("six-ﬁgure", "google-analytics-for-wordpress"),
+			__("six-figure", "google-analytics-for-wordpress"),
 			__("never again", "google-analytics-for-wordpress"),
 			__("research", "google-analytics-for-wordpress"),
 			__("surrender", "google-analytics-for-wordpress"),
@@ -587,7 +579,7 @@ class MonsterInsightsHeadlineToolPlugin{
 			__("teetering", "google-analytics-for-wordpress"),
 			__("unauthorized", "google-analytics-for-wordpress"),
 			__("spectacular", "google-analytics-for-wordpress"),
-			__("temporary ﬁx", "google-analytics-for-wordpress"),
+			__("temporary fix", "google-analytics-for-wordpress"),
 			__("unbelievably", "google-analytics-for-wordpress"),
 			__("spine", "google-analytics-for-wordpress"),
 			__("tempting", "google-analytics-for-wordpress"),
@@ -646,6 +638,8 @@ class MonsterInsightsHeadlineToolPlugin{
 			__("to be", "google-analytics-for-wordpress"),
 			__("vaporize", "google-analytics-for-wordpress"),
 		);
+
+		return $this->emotion_power_words;
 	}
 
 	/**
@@ -654,12 +648,16 @@ class MonsterInsightsHeadlineToolPlugin{
 	 * @return array power words
 	 */
 	function power_words() {
-		return array(
+		if ( isset( $this->power_words ) && ! empty( $this->power_words ) ) {
+			return $this->power_words;
+		}
+
+		$this->power_words = array(
 			__("great", "google-analytics-for-wordpress"),
 			__("free", "google-analytics-for-wordpress"),
 			__("focus", "google-analytics-for-wordpress"),
 			__("remarkable", "google-analytics-for-wordpress"),
-			__("conﬁdential", "google-analytics-for-wordpress"),
+			__("confidential", "google-analytics-for-wordpress"),
 			__("sale", "google-analytics-for-wordpress"),
 			__("wanted", "google-analytics-for-wordpress"),
 			__("obsession", "google-analytics-for-wordpress"),
@@ -746,19 +744,19 @@ class MonsterInsightsHeadlineToolPlugin{
 			__("zinger", "google-analytics-for-wordpress"),
 			__("suddenly", "google-analytics-for-wordpress"),
 			__("it's here", "google-analytics-for-wordpress"),
-			__("terriﬁc", "google-analytics-for-wordpress"),
-			__("simpliﬁed", "google-analytics-for-wordpress"),
+			__("terrific", "google-analytics-for-wordpress"),
+			__("simplified", "google-analytics-for-wordpress"),
 			__("perspective", "google-analytics-for-wordpress"),
 			__("just arrived", "google-analytics-for-wordpress"),
 			__("breakthrough", "google-analytics-for-wordpress"),
 			__("tremendous", "google-analytics-for-wordpress"),
 			__("launching", "google-analytics-for-wordpress"),
-			__("sure ﬁre", "google-analytics-for-wordpress"),
+			__("sure fire", "google-analytics-for-wordpress"),
 			__("emerging", "google-analytics-for-wordpress"),
 			__("helpful", "google-analytics-for-wordpress"),
 			__("skill", "google-analytics-for-wordpress"),
 			__("soar", "google-analytics-for-wordpress"),
-			__("proﬁtable", "google-analytics-for-wordpress"),
+			__("profitable", "google-analytics-for-wordpress"),
 			__("special offer", "google-analytics-for-wordpress"),
 			__("reduced", "google-analytics-for-wordpress"),
 			__("beautiful", "google-analytics-for-wordpress"),
@@ -829,6 +827,8 @@ class MonsterInsightsHeadlineToolPlugin{
 			__("delighted", "google-analytics-for-wordpress"),
 			__("download", "google-analytics-for-wordpress"),
 		);
+
+		return $this->power_words;
 	}
 
 	/**
@@ -837,7 +837,11 @@ class MonsterInsightsHeadlineToolPlugin{
 	 * @return array common words
 	 */
 	function common_words() {
-		return array(
+		if ( isset( $this->common_words ) && ! empty( $this->common_words ) ) {
+			return $this->common_words;
+		}
+
+		$this->common_words = array(
 			__("a", "google-analytics-for-wordpress"),
 			__("for", "google-analytics-for-wordpress"),
 			__("about", "google-analytics-for-wordpress"),
@@ -902,6 +906,8 @@ class MonsterInsightsHeadlineToolPlugin{
 			__("your", "google-analytics-for-wordpress"),
 			__("there", "google-analytics-for-wordpress"),
 		);
+
+		return $this->common_words;
 	}
 
 
@@ -911,7 +917,11 @@ class MonsterInsightsHeadlineToolPlugin{
 	 * @return array uncommon words
 	 */
 	function uncommon_words() {
-		return array(
+		if ( isset( $this->uncommon_words ) && ! empty( $this->uncommon_words ) ) {
+			return $this->uncommon_words;
+		}
+
+		$this->uncommon_words = array(
 			__("actually", "google-analytics-for-wordpress"),
 			__("happened", "google-analytics-for-wordpress"),
 			__("need", "google-analytics-for-wordpress"),
@@ -956,14 +966,14 @@ class MonsterInsightsHeadlineToolPlugin{
 			__("make", "google-analytics-for-wordpress"),
 			__("reasons", "google-analytics-for-wordpress"),
 			__("year", "google-analytics-for-wordpress"),
-			__("ﬁrst", "google-analytics-for-wordpress"),
+			__("first", "google-analytics-for-wordpress"),
 			__("makes", "google-analytics-for-wordpress"),
 			__("right", "google-analytics-for-wordpress"),
 			__("years", "google-analytics-for-wordpress"),
 			__("found", "google-analytics-for-wordpress"),
 			__("man", "google-analytics-for-wordpress"),
 			__("see", "google-analytics-for-wordpress"),
-			__("you’ll", "google-analytics-for-wordpress"),
+			__("you'll", "google-analytics-for-wordpress"),
 			__("girl", "google-analytics-for-wordpress"),
 			__("media", "google-analytics-for-wordpress"),
 			__("seen", "google-analytics-for-wordpress"),
@@ -974,6 +984,8 @@ class MonsterInsightsHeadlineToolPlugin{
 			__("more", "google-analytics-for-wordpress"),
 			__("something", "google-analytics-for-wordpress"),
 		);
+
+		return $this->uncommon_words;
 	}
 }
 

@@ -40,6 +40,15 @@ class Model implements \JsonSerializable {
 	protected $booleanFields = [];
 
 	/**
+	 * Fields that should be numeric values.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @var array
+	 */
+	protected $numericFields = [];
+
+	/**
 	 * Fields that should be hidden when serialized.
 	 *
 	 * @since 4.0.0
@@ -123,7 +132,7 @@ class Model implements \JsonSerializable {
 			return false;
 		}
 
-		$query = aioseo()->db
+		$query = aioseo()->core->db
 			->start( $this->table )
 			->where( $this->pk, $var )
 			->limit( 1 )
@@ -155,13 +164,26 @@ class Model implements \JsonSerializable {
 
 		foreach ( (array) $array as $key => $value ) {
 			trim( $key );
-			$this->$key = in_array( $key, $this->jsonFields, true )
-				? json_decode( $value )
-				: (
-					in_array( $key, $this->booleanFields, true )
-						? (bool) $value
-						: $value
-				);
+			$this->$key = $value;
+
+			if ( null === $value && in_array( $key, $this->nullFields, true ) ) {
+				continue;
+			}
+
+			if ( in_array( $key, $this->jsonFields, true ) ) {
+				$this->$key = json_decode( $value );
+				continue;
+			}
+
+			if ( in_array( $key, $this->booleanFields, true ) ) {
+				$this->$key = (bool) $value;
+				continue;
+			}
+
+			if ( in_array( $key, $this->numericFields, true ) ) {
+				$this->$key = (int) $value;
+				continue;
+			}
 		}
 	}
 
@@ -175,8 +197,8 @@ class Model implements \JsonSerializable {
 	 * @return array         The array of valid columns for the database query.
 	 */
 	protected function filter( $key ) {
-		$table   = aioseo()->db->prefix . $this->table;
-		$results = aioseo()->db->execute( 'SHOW COLUMNS FROM `' . $table . '`', true );
+		$table   = aioseo()->core->db->prefix . $this->table;
+		$results = aioseo()->core->db->execute( 'SHOW COLUMNS FROM `' . $table . '`', true );
 		$fields  = [];
 		$skip    = [ 'created', 'updated' ];
 		$columns = $results->result();
@@ -217,8 +239,17 @@ class Model implements \JsonSerializable {
 			return $data;
 		}
 
+		foreach ( $this->numericFields as $field ) {
+			if ( isset( $data[ $field ] ) ) {
+				$data[ $field ] = (int) $data[ $field ];
+			}
+		}
+
 		foreach ( $this->jsonFields as $field ) {
-			if ( isset( $data[ $field ] ) && ! empty( $data[ $field ] ) ) {
+			if ( isset( $data[ $field ] ) && ! aioseo()->helpers->isJsonString( $data[ $field ] ) ) {
+				if ( is_array( $data[ $field ] ) && aioseo()->helpers->isArrayNumeric( $data[ $field ] ) ) {
+					$data[ $field ] = array_values( $data[ $field ] );
+				}
 				$data[ $field ] = wp_json_encode( $data[ $field ] );
 			}
 		}
@@ -271,7 +302,7 @@ class Model implements \JsonSerializable {
 	 * @return null
 	 */
 	public function delete() {
-		aioseo()->db
+		aioseo()->core->db
 			->delete( $this->table )
 			->where( $this->pk, $this->id )
 			->run();
@@ -294,7 +325,7 @@ class Model implements \JsonSerializable {
 			if ( isset( $this->$pk ) && '' !== $this->$pk ) {
 				// PK specified.
 				$pkv   = $this->$pk;
-				$query = aioseo()->db
+				$query = aioseo()->core->db
 					->start( $this->table )
 					->where( [ $pk => $pkv ] )
 					->run();
@@ -302,7 +333,7 @@ class Model implements \JsonSerializable {
 				if ( ! $query->nullSet() ) {
 					// Row exists in database.
 					$fields['updated'] = gmdate( 'Y-m-d H:i:s' );
-					aioseo()->db
+					aioseo()->core->db
 						->update( $this->table )
 						->set( $fields )
 						->where( [ $pk => $pkv ] )
@@ -314,7 +345,7 @@ class Model implements \JsonSerializable {
 					$fields['created'] = gmdate( 'Y-m-d H:i:s' );
 					$fields['updated'] = gmdate( 'Y-m-d H:i:s' );
 
-					$id = aioseo()->db
+					$id = aioseo()->core->db
 						->insert( $this->table )
 						->set( $fields )
 						->run()
@@ -328,7 +359,7 @@ class Model implements \JsonSerializable {
 				$fields['created'] = gmdate( 'Y-m-d H:i:s' );
 				$fields['updated'] = gmdate( 'Y-m-d H:i:s' );
 
-				$id = aioseo()->db
+				$id = aioseo()->core->db
 					->insert( $this->table )
 					->set( $fields )
 					->run()
@@ -383,7 +414,7 @@ class Model implements \JsonSerializable {
 				continue;
 			}
 
-			$array[ $column ] = ! empty( $this->$column ) ? $this->$column : null;
+			$array[ $column ] = isset( $this->$column ) ? $this->$column : null;
 		}
 
 		return $array;
@@ -401,11 +432,17 @@ class Model implements \JsonSerializable {
 			self::$columns[ get_called_class() ] = [];
 
 			// Let's set the columns that are available by default.
-			$table   = aioseo()->db->prefix . $this->table;
-			$results = aioseo()->db->execute( 'SHOW COLUMNS FROM `' . $table . '`', true );
+			$table   = aioseo()->core->db->prefix . $this->table;
+			$results = aioseo()->core->db->execute( 'SHOW COLUMNS FROM `' . $table . '`', true );
 
 			foreach ( $results->result() as $col ) {
 				self::$columns[ get_called_class() ][ $col->Field ] = $col->Default;
+			}
+
+			if ( ! empty( $this->appends ) ) {
+				foreach ( $this->appends as $append ) {
+					self::$columns[ get_called_class() ][ $append ] = null;
+				}
 			}
 		}
 
@@ -417,10 +454,26 @@ class Model implements \JsonSerializable {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @return string JSON object.
+	 * @param  string $existingOptions The existing options in JSON.
+	 * @return string                  The existing options with defaults added in JSON.
 	 */
-	public static function getDefaultTabsOptions() {
-		return '{"tab":"general","tab_social":"facebook","tab_sidebar":"general","tab_modal":"general","tab_modal_social":"facebook"}';
+	public static function getDefaultTabsOptions( $existingOptions = '' ) {
+		$defaults = [
+			'tab'              => 'general',
+			'tab_social'       => 'facebook',
+			'tab_sidebar'      => 'general',
+			'tab_modal'        => 'general',
+			'tab_modal_social' => 'facebook'
+		];
+
+		if ( empty( $existingOptions ) ) {
+			return wp_json_encode( $defaults );
+		}
+
+		$existingOptions = json_decode( $existingOptions, true );
+		$existingOptions = array_replace_recursive( $defaults, $existingOptions );
+
+		return wp_json_encode( $existingOptions );
 	}
 
 	/**
@@ -428,8 +481,8 @@ class Model implements \JsonSerializable {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param  string The existing options in JSON.
-	 * @return string The existing options with defaults added in JSON.
+	 * @param  string $existingOptions The existing options in JSON.
+	 * @return string                  The existing options with defaults added in JSON.
 	 */
 	public static function getDefaultSchemaOptions( $existingOptions = '' ) {
 		// If the root level value for a graph needs to be an object, we need to set at least one property inside of it so that PHP doesn't convert it to an empty array.
@@ -471,16 +524,5 @@ class Model implements \JsonSerializable {
 		$existingOptions = array_replace_recursive( $defaults, $existingOptions );
 
 		return wp_json_encode( $existingOptions );
-	}
-
-	/**
-	 * Returns a JSON object with default local seo options.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return string JSON object.
-	 */
-	public static function getDefaultLocalSeoOptions() {
-		return '{"businessInfo":{"name":"","urls":{"website":"","aboutPage":"","contactPage":""},"address":{"line1":"","line2":"","zip":"","city":"","state":"","country":""},"contact":{"email":"","phone":"","fax":""},"ids":{"vatID":"","taxID":"","chamberID":""},"payment":{"priceIndication":"","currenciesAccepted":"","methodsAccepted":""},"areaServed":""},"openingHours":{"show":false,"closedLabel":"","open24h":false,"open24hLabel":"","open247":false,"use24hFormat":false,"twoSets":false,"timezone":"","hours":{}}}'; // phpcs:ignore Generic.Files.LineLength.MaxExceeded
 	}
 }

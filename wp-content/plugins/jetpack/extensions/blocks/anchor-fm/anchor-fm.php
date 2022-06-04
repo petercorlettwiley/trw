@@ -4,7 +4,7 @@
  *
  * @since 9.3.0
  *
- * @package Jetpack
+ * @package automattic/jetpack
  */
 
 namespace Automattic\Jetpack\Extensions\AnchorFm;
@@ -62,15 +62,13 @@ function register_extension() {
 function process_anchor_params() {
 	if (
 		! function_exists( 'get_current_screen' )
-		|| is_null( \get_current_screen() )
+		|| \get_current_screen() === null
 	) {
 		return;
 	}
 
-	$current_screen = \get_current_screen();
-	// TODO: Replace `$current_screen->is_block_editor()` with `wp_should_load_block_editor_scripts_and_styles()` that is introduced in WP 5.6.
-	if ( method_exists( $current_screen, 'is_block_editor' ) && ! $current_screen->is_block_editor() ) {
-		// Return early if we are not in the block editor.
+	// Return early if we are not in the block editor.
+	if ( ! wp_should_load_block_editor_scripts_and_styles() ) {
 		return;
 	}
 

@@ -12,7 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 4.0.0
  */
 abstract class SearchAppearance {
-
 	/**
 	 * The schema graphs we support.
 	 *
@@ -40,7 +39,6 @@ abstract class SearchAppearance {
 		'FAQPage',
 		'ItemPage',
 		'ProfilePage',
-		'QAPage',
 		'RealEstateListing',
 		'SearchResultsPage',
 		'WebPage'

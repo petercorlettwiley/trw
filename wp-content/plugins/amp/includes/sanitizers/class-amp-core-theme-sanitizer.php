@@ -6,9 +6,10 @@
  * @since 1.0
  */
 
-use AmpProject\Attribute;
-use AmpProject\Dom\Document;
-use AmpProject\Role;
+use AmpProject\Amp;
+use AmpProject\Html\Attribute;
+use AmpProject\Html\Tag;
+use AmpProject\Html\Role;
 
 /**
  * Class AMP_Core_Theme_Sanitizer
@@ -29,6 +30,7 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 	 *      @type string $stylesheet     Stylesheet slug.
 	 *      @type string $template       Template slug.
 	 *      @type array  $theme_features List of theme features that need to be applied. Features are method names,
+	 *      @type bool   $native_img_used Whether to use native img.
 	 * }
 	 */
 	protected $args;
@@ -76,42 +78,38 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 	 * @since 1.5.0 Converted `theme_features` variable into `get_theme_config` function.
 	 *
 	 * @param string $theme_slug Theme slug.
+	 * @param array  $args       Sanitizer args.
 	 * @return array|null Array comprising of the theme config if its slug is found, null if it is not.
 	 */
-	protected static function get_theme_features_config( $theme_slug ) {
+	protected static function get_theme_features_config( $theme_slug, $args = [] ) {
 		switch ( $theme_slug ) {
 			case 'twentytwentyone':
 				$config = [
-					'dequeue_scripts'                  => [
+					'dequeue_scripts'                      => [
 						'twenty-twenty-one-responsive-embeds-script',
 						'twenty-twenty-one-primary-navigation-script',
 					],
-					'remove_actions'                   => [
+					'remove_actions'                       => [
 						'wp_print_footer_scripts' => [
 							'twenty_twenty_one_skip_link_focus_fix', // Unnecessary since part of the AMP runtime.
 						],
 						'wp_footer'               => [
 							'twentytwentyone_add_ie_class',
 							'twenty_twenty_one_supports_js', // AMP is essentially no-js, with any interactivity added explicitly via amp-bind.
+							[
+								'Twenty_Twenty_One_Dark_Mode',
+								'the_switch',
+								10,
+							],
 						],
 					],
-					'amend_twentytwentyone_styles'     => [],
+					'amend_twentytwentyone_styles'         => [],
 					'amend_twentytwentyone_sub_menu_toggles' => [],
-					'add_twentytwentyone_mobile_modal' => [],
-					'add_twentytwentyone_sub_menu_fix' => [],
+					'add_twentytwentyone_mobile_modal'     => [],
+					'add_twentytwentyone_sub_menu_fix'     => [],
+					'add_twentytwentyone_dark_mode_toggle' => [],
+					'amend_twentytwentyone_dark_mode_styles' => [],
 				];
-
-				// Dark mode button toggle is only supported in the Customizer for now.
-				// A notice is added to the Customizer control in AMP_Template_Customizer::add_dark_mode_toggler_button_notice() via AMP_Template_Customizer::init().
-				if ( is_customize_preview() ) {
-					// Make dark mode toggle AMP compatible.
-					$config['add_twentytwentyone_dark_mode_toggle'] = [];
-				} else {
-					// Amend the dark mode stylesheet to only apply its rules when the user's system supports dark mode.
-					$config['amend_twentytwentyone_dark_mode_styles'] = [];
-					// Prevent the dark mode toggle and its accompanying script from being inlined.
-					$config['remove_actions']['wp_footer'][] = [ 'Twenty_Twenty_One_Dark_Mode', 'the_switch', 10 ];
-				}
 
 				return $config;
 
@@ -135,9 +133,9 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 					'add_twentytwenty_modals'          => [],
 					'add_twentytwenty_toggles'         => [],
 					'add_nav_menu_styles'              => [],
-					'add_twentytwenty_masthead_styles' => [],
-					'add_img_display_block_fix'        => [],
-					'add_twentytwenty_custom_logo_fix' => [],
+					'add_twentytwenty_masthead_styles' => $args,
+					'add_img_display_block_fix'        => $args,
+					'add_twentytwenty_custom_logo_fix' => $args,
 					'add_twentytwenty_current_page_awareness' => [],
 				];
 
@@ -154,18 +152,17 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 			// Twenty Nineteen.
 			case 'twentynineteen':
 				return [
-					'dequeue_scripts'                    => [
+					'dequeue_scripts'              => [
 						'twentynineteen-skip-link-focus-fix', // This is part of AMP. See <https://github.com/ampproject/amphtml/issues/18671>.
 						'twentynineteen-priority-menu',
 						'twentynineteen-touch-navigation', // @todo There could be an AMP implementation of this, similar to what is implemented on ampproject.org.
 					],
-					'remove_actions'                     => [
+					'remove_actions'               => [
 						'wp_print_footer_scripts' => [
 							'twentynineteen_skip_link_focus_fix', // See <https://github.com/WordPress/twentynineteen/pull/47>.
 						],
 					],
-					'add_twentynineteen_masthead_styles' => [],
-					'adjust_twentynineteen_images'       => [],
+					'adjust_twentynineteen_images' => [],
 				];
 
 			// Twenty Seventeen.
@@ -189,7 +186,6 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 					],
 					'force_fixed_background_support'      => [],
 					'add_twentyseventeen_masthead_styles' => [],
-					'add_twentyseventeen_image_styles'    => [],
 					'add_twentyseventeen_sticky_nav_menu' => [],
 					'add_has_header_video_body_class'     => [],
 					'add_nav_menu_styles'                 => [
@@ -200,7 +196,7 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 						'//header[@id = "masthead"]//a[ contains( @class, "menu-scroll-down" ) ]',
 					],
 					'set_twentyseventeen_quotes_icon'     => [],
-					'add_twentyseventeen_attachment_image_attributes' => [],
+					'add_twentyseventeen_attachment_image_attributes' => $args,
 				];
 
 			// Twenty Sixteen.
@@ -490,7 +486,7 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 		$theme_candidates = wp_array_slice_assoc( $args, [ 'stylesheet', 'template' ] );
 		foreach ( $theme_candidates as $theme_candidate ) {
 			if ( in_array( $theme_candidate, self::$supported_themes, true ) ) {
-				$theme_features = self::get_theme_features_config( $theme_candidate );
+				$theme_features = self::get_theme_features_config( $theme_candidate, $args );
 				break;
 			}
 		}
@@ -564,8 +560,14 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 	 *
 	 * @since 1.0
 	 * @link https://github.com/WordPress/wordpress-develop/blob/ddc8f803c6e99118998191fd2ea24124feb53659/src/wp-content/themes/twentyseventeen/functions.php#L545:L554
+	 *
+	 * @param array $args Args.
 	 */
-	public static function add_twentyseventeen_attachment_image_attributes() {
+	public static function add_twentyseventeen_attachment_image_attributes( $args = [] ) {
+		if ( ! empty( $args['native_img_used'] ) ) {
+			return;
+		}
+
 		/*
 		 * The max-height of the `.custom-logo-link img` is defined as being 80px, unless
 		 * there is header media in which case it is 200px. Issues related to vertically-squashed
@@ -800,9 +802,16 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 	}
 
 	/**
-	 * Add required styles for featured image header and image blocks in Twenty Twenty.
+	 * Add required styles for featured image header in Twenty Twenty.
+	 *
+	 * @param array $args Args.
 	 */
-	public static function add_twentytwenty_masthead_styles() {
+	public static function add_twentytwenty_masthead_styles( $args = [] ) {
+		if ( ! empty( $args['native_img_used'] ) ) {
+			return;
+		}
+
+		// @todo This was introduced in <https://github.com/ampproject/amp-wp/commit/e1c7462> but it doesn't seem to have any effect.
 		add_action(
 			'wp_enqueue_scripts',
 			static function() {
@@ -811,10 +820,6 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 				<style>
 				.featured-media amp-img {
 					position: static;
-				}
-
-				.wp-block-image img {
-					display: block;
 				}
 				</style>
 				<?php
@@ -834,8 +839,14 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 	 * @since 1.5
 	 * @link https://github.com/ampproject/amp-wp/issues/4418
 	 * @link https://codepen.io/westonruter/pen/rNVqadv
+	 *
+	 * @param array $args Args.
 	 */
-	public static function add_twentytwenty_custom_logo_fix() {
+	public static function add_twentytwenty_custom_logo_fix( $args = [] ) {
+		if ( ! empty( $args['native_img_used'] ) ) {
+			return;
+		}
+
 		$method = __METHOD__;
 		add_filter(
 			'get_custom_logo',
@@ -886,8 +897,14 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 	 *
 	 * @since 1.5
 	 * @link https://github.com/ampproject/amp-wp/issues/4419
+	 *
+	 * @param array $args Args.
 	 */
-	public static function add_img_display_block_fix() {
+	public static function add_img_display_block_fix( $args = [] ) {
+		if ( ! empty( $args['native_img_used'] ) ) {
+			return;
+		}
+
 		$method = __METHOD__;
 		// Note that wp_add_inline_style() is not used because this stylesheet needs to be added _before_ style.css so
 		// that any subsequent style rules for images will continue to override.
@@ -905,70 +922,13 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 	}
 
 	/**
-	 * Add required styles for featured image header in Twenty Nineteen.
+	 * Add required styles for Twenty Seventeen header.
 	 *
-	 * The following is necessary because the styles in the theme apply to the featured img,
-	 * and the CSS parser will then convert the selectors to amp-img. Nevertheless, object-fit
-	 * does not apply on amp-img and it needs to apply on an actual img.
-	 *
-	 * @link https://github.com/WordPress/wordpress-develop/blob/5.0/src/wp-content/themes/twentynineteen/style.css#L2276-L2299
-	 * @since 1.0
-	 */
-	public static function add_twentynineteen_masthead_styles() {
-		add_action(
-			'wp_enqueue_scripts',
-			static function() {
-				ob_start();
-				?>
-				<style>
-				.site-header.featured-image .site-featured-image .post-thumbnail amp-img > img {
-					height: auto;
-					left: 50%;
-					max-width: 1000%;
-					min-height: 100%;
-					min-width: 100vw;
-					position: absolute;
-					top: 50%;
-					transform: translateX(-50%) translateY(-50%);
-					width: auto;
-					z-index: 1;
-					/* When image filters are active, make it grayscale to colorize it blue. */
-				}
-
-				@supports (object-fit: cover) {
-					.site-header.featured-image .site-featured-image .post-thumbnail amp-img > img {
-						height: 100%;
-						left: 0;
-						object-fit: cover;
-						top: 0;
-						transform: none;
-						width: 100%;
-					}
-				}
-				</style>
-				<?php
-				$styles = str_replace( [ '<style>', '</style>' ], '', ob_get_clean() );
-				wp_add_inline_style( get_template() . '-style', $styles );
-			},
-			11
-		);
-	}
-
-	/**
-	 * Add required styles for video and image headers.
-	 *
-	 * This is currently used exclusively for Twenty Seventeen.
+	 * This is required since JS is not applying the required styles at runtime.
 	 *
 	 * @since 1.0
-	 * @link https://github.com/WordPress/wordpress-develop/blob/1af1f65a21a1a697fb5f33027497f9e5ae638453/src/wp-content/themes/twentyseventeen/style.css#L1687
-	 * @link https://github.com/WordPress/wordpress-develop/blob/1af1f65a21a1a697fb5f33027497f9e5ae638453/src/wp-content/themes/twentyseventeen/style.css#L1743
 	 */
 	public static function add_twentyseventeen_masthead_styles() {
-		/*
-		 * The following is necessary because the styles in the theme apply to img and video,
-		 * and the CSS parser will then convert the selectors to amp-img and amp-video respectively.
-		 * Nevertheless, object-fit does not apply on amp-img and it needs to apply on an actual img.
-		 */
 		add_action(
 			'wp_enqueue_scripts',
 			static function() {
@@ -976,50 +936,6 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 				ob_start();
 				?>
 				<style>
-				.has-header-image .custom-header-media amp-img > img,
-				.has-header-video .custom-header-media amp-video > video{
-					position: fixed;
-					height: auto;
-					left: 50%;
-					max-width: 1000%;
-					min-height: 100%;
-					min-width: 100%;
-					min-width: 100vw; /* vw prevents 1px gap on left that 100% has */
-					width: auto;
-					top: 50%;
-					padding-bottom: 1px; /* Prevent header from extending beyond the footer */
-					-ms-transform: translateX(-50%) translateY(-50%);
-					-moz-transform: translateX(-50%) translateY(-50%);
-					-webkit-transform: translateX(-50%) translateY(-50%);
-					transform: translateX(-50%) translateY(-50%);
-				}
-				.has-header-image:not(.twentyseventeen-front-page):not(.home) .custom-header-media amp-img > img {
-					bottom: 0;
-					position: absolute;
-					top: auto;
-					-ms-transform: translateX(-50%) translateY(0);
-					-moz-transform: translateX(-50%) translateY(0);
-					-webkit-transform: translateX(-50%) translateY(0);
-					transform: translateX(-50%) translateY(0);
-				}
-				/* For browsers that support object-fit */
-				@supports ( object-fit: cover ) {
-					.has-header-image .custom-header-media amp-img > img,
-					.has-header-video .custom-header-media amp-video > video,
-					.has-header-image:not(.twentyseventeen-front-page):not(.home) .custom-header-media amp-img > img {
-						height: 100%;
-						left: 0;
-						-o-object-fit: cover;
-						object-fit: cover;
-						top: 0;
-						-ms-transform: none;
-						-moz-transform: none;
-						-webkit-transform: none;
-						transform: none;
-						width: 100%;
-					}
-				}
-
 				.navigation-top.site-navigation-fixed {
 					display: none;
 				}
@@ -1050,38 +966,6 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 						transform: translateY( -<?php echo (int) AMP_Core_Theme_Sanitizer::get_twentyseventeen_navigation_outer_height(); ?>px );
 						display: block;
 					}
-				}
-				</style>
-				<?php
-				$styles = str_replace( [ '<style>', '</style>' ], '', ob_get_clean() );
-				wp_add_inline_style( get_template() . '-style', $styles );
-			},
-			11
-		);
-	}
-
-	/**
-	 * Override the featured image header styling in style.css.
-	 * Used only for Twenty Seventeen.
-	 *
-	 * @since 1.0
-	 * @link https://github.com/WordPress/wordpress-develop/blob/1af1f65a21a1a697fb5f33027497f9e5ae638453/src/wp-content/themes/twentyseventeen/style.css#L2100
-	 */
-	public static function add_twentyseventeen_image_styles() {
-		add_action(
-			'wp_enqueue_scripts',
-			static function() {
-				ob_start();
-				?>
-				<style>
-				/* Override the display: block in twentyseventeen/style.css, as <amp-img> is usually inline-block. */
-				.single-featured-image-header amp-img {
-					display: inline-block;
-				}
-
-				/* Because the <amp-img> is inline-block, its container needs this rule to center it. */
-				.single-featured-image-header {
-					text-align: center;
 				}
 				</style>
 				<?php
@@ -1446,7 +1330,7 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 						padding-top: 0; /* Override responsive hack which is handled by AMP layout. */
 						overflow: visible;
 					}
-					.featured-content .post-thumbnail amp-img {
+					.featured-content .post-thumbnail .wp-post-image {
 						position: static;
 						left: auto;
 						top: auto;
@@ -1522,7 +1406,7 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 							font-size: 32px;
 							line-height: 46px;
 						}
-						.featured-content .post-thumbnail amp-img > img {
+						.featured-content .post-thumbnail .wp-post-image {
 							object-fit: cover;
 							object-position: top;
 						}
@@ -1532,7 +1416,7 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 								float: none;
 								margin: 0;
 							}
-							.featured-content .post-thumbnail amp-img {
+							.featured-content .post-thumbnail .wp-post-image {
 								height: 55.49132947vw;
 							}
 							.slider-control-paging li {
@@ -1601,12 +1485,12 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 		$amp_carousel_desktop_id = 'twentyFourteenSliderDesktop';
 		$amp_carousel_mobile_id  = 'twentyFourteenSliderMobile';
 		$amp_carousel_attributes = [
-			'layout'                                      => 'responsive',
-			'on'                                          => "slideChange:AMP.setState( { $selected_slide_state_id: event.index } )",
-			'width'                                       => '100',
-			'type'                                        => 'slides',
-			'loop'                                        => '',
-			Document::AMP_BIND_DATA_ATTR_PREFIX . 'slide' => $selected_slide_state_id,
+			'layout'                             => 'responsive',
+			'on'                                 => "slideChange:AMP.setState( { $selected_slide_state_id: event.index } )",
+			'width'                              => '100',
+			'type'                               => 'slides',
+			'loop'                               => '',
+			Amp::BIND_DATA_ATTR_PREFIX . 'slide' => $selected_slide_state_id,
 		];
 		$amp_carousel_desktop    = AMP_DOM_Utils::create_node(
 			$this->dom,
@@ -1654,7 +1538,7 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 				$li->setAttribute( 'selected', '' );
 				$a->setAttribute( 'class', 'slider-active' );
 			}
-			$a->setAttribute( Document::AMP_BIND_DATA_ATTR_PREFIX . 'class', "$selected_slide_state_id == $i ? 'slider-active' : ''" );
+			$a->setAttribute( Amp::BIND_DATA_ATTR_PREFIX . 'class', "$selected_slide_state_id == $i ? 'slider-active' : ''" );
 			$a->setAttribute( Attribute::ROLE, Role::BUTTON );
 			$a->setAttribute( Attribute::ON, "tap:AMP.setState( { $selected_slide_state_id: $i } )" );
 			$li->setAttribute( 'option', (string) $i );
@@ -1709,9 +1593,9 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 
 		// Set visibility and aria-expanded based of the link based on whether the search bar is expanded.
 		$search_toggle_link->setAttribute( 'aria-expanded', wp_json_encode( $hidden ) );
-		$search_toggle_link->setAttribute( Document::AMP_BIND_DATA_ATTR_PREFIX . 'aria-expanded', "$hidden_state_id ? 'false' : 'true'" );
-		$search_toggle_div->setAttribute( Document::AMP_BIND_DATA_ATTR_PREFIX . 'class', "$hidden_state_id ? 'search-toggle' : 'search-toggle active'" );
-		$search_container->setAttribute( Document::AMP_BIND_DATA_ATTR_PREFIX . 'class', "$hidden_state_id ? 'search-box-wrapper hide' : 'search-box-wrapper'" );
+		$search_toggle_link->setAttribute( Amp::BIND_DATA_ATTR_PREFIX . 'aria-expanded', "$hidden_state_id ? 'false' : 'true'" );
+		$search_toggle_div->setAttribute( Amp::BIND_DATA_ATTR_PREFIX . 'class', "$hidden_state_id ? 'search-toggle' : 'search-toggle active'" );
+		$search_container->setAttribute( Amp::BIND_DATA_ATTR_PREFIX . 'class', "$hidden_state_id ? 'search-box-wrapper hide' : 'search-box-wrapper'" );
 	}
 
 	/**
@@ -2002,22 +1886,26 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 	}
 
 	/**
-	 * Amend the Twenty Twenty-One dark mode stylesheet to only apply the relevant rules when the user has requested
-	 * the system use a dark color theme.
-	 *
-	 * Note: Dark mode will only be available when the user's system supports it. The dark mode toggle is not available
-	 * on the frontend as yet since there is no feasible AMP-compatible way to store and unserialize user's preferences.
+	 * Amend the Twenty Twenty-One dark mode stylesheet to only apply the relevant rules when the user has enables
+	 * dark mode support from the customizer options.
 	 */
 	public static function amend_twentytwentyone_dark_mode_styles() {
 		add_action(
 			'wp_enqueue_scripts',
 			static function() {
-				// Bail if the dark mode stylesheet is not enqueued.
-				if ( ! wp_style_is( 'tt1-dark-mode' ) ) {
+				$theme_style_handle     = 'twenty-twenty-one-style';
+				$dark_mode_style_handle = 'tt1-dark-mode';
+
+				// Bail if the dark mode stylesheet is not enqueued or the theme stylesheet isn't registered.
+				if (
+					! wp_style_is( $dark_mode_style_handle, 'enqueued' )
+					||
+					! wp_style_is( $theme_style_handle, 'registered' )
+				) {
 					return; // @codeCoverageIgnore
 				}
 
-				wp_dequeue_style( 'tt1-dark-mode' );
+				wp_dequeue_style( $dark_mode_style_handle );
 
 				$dark_mode_css_file = get_theme_file_path(
 					sprintf( 'assets/css/style-dark-mode%s.css', is_rtl() ? '-rtl' : '' )
@@ -2029,21 +1917,17 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 
 				$styles = file_get_contents( $dark_mode_css_file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 
-				// Restrict rules to only when the user has requested the system use a dark color theme.
-				$new_styles = str_replace( '@media only screen', '@media only screen and (prefers-color-scheme: dark)', $styles );
 				// Allow for rules to override the light theme related rules.
-				$new_styles = str_replace( '.is-dark-theme.is-dark-theme', ':root', $new_styles );
-				$new_styles = str_replace( '.respect-color-scheme-preference.is-dark-theme body', '.respect-color-scheme-preference body', $new_styles );
+				$styles = str_replace( '.respect-color-scheme-preference.is-dark-theme body', '.respect-color-scheme-preference body.is-dark-theme', $styles );
 
-				wp_add_inline_style( 'twenty-twenty-one-style', $new_styles );
+				wp_add_inline_style( $theme_style_handle, $styles );
 			},
 			11
 		);
 	}
 
 	/**
-	 * Amend the Twenty Twenty-One stylesheet to make it compatible with the changes made to the document during
-	 * sanitization.
+	 * Amend Twenty Twenty-One Styles.
 	 */
 	public static function amend_twentytwentyone_styles() {
 		add_action(
@@ -2072,7 +1956,14 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 
 				$styles = file_get_contents( $css_file ); //phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 
-				// Append any extra rules that may be needed.
+				// AMP provides a global API "AMP.toggleTheme()" to support dark theme by toggling a BODY element class.
+				// However, for dark mode in the Twenty Twenty-One theme, the class needs to be toggled on HTML and BODY elements because the CSS variables are set at the root level.
+				// In AMP we cannot toggle HTML classes. So here we are changing the location where CSS variables are defined from `:root` to the BODY element.
+				if ( get_theme_mod( 'respect_user_color_preference', false ) ) {
+					$styles = str_replace( ':root {', 'body {', $styles );
+				}
+
+				// Append extra rules needed for nav menus according to changes made to the document during sanitization.
 				$styles .= '
 					/* Trap keyboard navigation within mobile menu when it\'s open */
 					@media only screen and (max-width: 481px) {
@@ -2103,6 +1994,17 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 					}
 				';
 
+				/*
+				 * In Twenty Twenty-One, when a button is used to resize AMP elements, they can appear transparent when hovered over.
+				 * To resolve this issue, the theme's background color is used as the background color for the button
+				 * when it is in the hovered state.
+				 */
+				$styles .= '
+					button[overflow]:hover {
+						background-color: var(--global--color-background);
+					}
+				';
+
 				// Ideally wp_add_inline_style() would accept a $position argument like wp_add_inline_script() does, in
 				// which case the following could be replaced with wp_add_inline_style( $style_handle, $new_styles, 'before' ).
 				// But this is not supported, so we have to resort to manipulating the underlying after array.
@@ -2117,32 +2019,78 @@ class AMP_Core_Theme_Sanitizer extends AMP_Base_Sanitizer {
 
 	/**
 	 * Make the dark mode toggle in the Twenty Twenty-One theme AMP compatible.
-	 *
-	 * Note: This is only shown within the Customizer preview for now, as there is no feasible way of persisting and
-	 * unserializing the user's preference when they switch to dark (or light) mode.
 	 */
 	public function add_twentytwentyone_dark_mode_toggle() {
-		$button = $this->dom->getElementById( 'dark-mode-toggler' );
+		// First check if dark mode is enabled.
+		$should_respect_color_scheme = get_theme_mod( 'respect_user_color_preference', false );
 
-		if ( ! $button ) {
+		if ( ! $should_respect_color_scheme ) {
 			return;
 		}
 
-		$style              = $this->dom->createElement( 'style' );
-		$style->textContent = '.no-js #dark-mode-toggler { display: block; }';
+		// Create button element for dark mode toggle.
+		// Dark mode toggle button html and js has been omitted due to removing `the_switch` function.
+		$button = AMP_DOM_Utils::create_node(
+			$this->dom,
+			Tag::BUTTON,
+			[
+				Attribute::ID     => 'dark-mode-toggler',
+				Attribute::CLASS_ => 'fixed-bottom',
+			]
+		);
+
+		/* translators: %s: On/Off */
+		$dark_mode_label = __( 'Dark Mode: %s', 'twentytwentyone' ); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+		$dark_mode_off   = sprintf( $dark_mode_label, __( 'Off', 'twentytwentyone' ) ); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+		$dark_mode_on    = sprintf( $dark_mode_label, __( 'On', 'twentytwentyone' ) ); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+
+		// Create span tag to show `On` for dark mode.
+		$button_text_on = $this->dom->createElement( Tag::SPAN );
+		$button_text_on->setAttribute( Attribute::CLASS_, 'dark-mode-button-on' );
+		$button_text_on->nodeValue = $dark_mode_on;
+
+		// Create span tag to show `Off` for dark mode.
+		$button_text_off = $this->dom->createElement( Tag::SPAN );
+		$button_text_off->setAttribute( Attribute::CLASS_, 'dark-mode-button-off' );
+		$button_text_off->nodeValue = $dark_mode_off;
+
+		// Add button_text_{On, Off} to button.
+		$button->appendChild( $button_text_on );
+		$button->appendChild( $button_text_off );
+
+		// Add button to body.
+		$this->dom->body->appendChild( $button );
+
+		$style = $this->dom->createElement( Tag::STYLE );
+		$style->setAttribute( Attribute::ID, 'amp-twentytwentyone-dark-mode-toggle-styles' );
+		$style->textContent = sprintf( // We need to add these styles to show On and Off to the user.
+			'
+				.no-js #dark-mode-toggler {
+					display: block;
+				}
+				#dark-mode-toggler > span {
+					margin-%s: 5px;
+				}
+				.dark-mode-button-on {
+					display: none;
+				}
+				body.is-dark-theme .dark-mode-button-on {
+					display: inline-block;
+				}
+				body.is-dark-theme .dark-mode-button-off {
+					display: none;
+				}
+			',
+			is_rtl() ? 'right' : 'left'
+		);
 		$this->dom->head->appendChild( $style );
 
 		$toggle_class = 'is-dark-theme';
-		$state_id     = str_replace( '-', '_', $toggle_class );
 
-		$body_id     = $this->dom->getElementId( $this->dom->body );
-		$document_id = $this->dom->getElementId( $this->dom->documentElement );
+		// Add data-prefers-dark-mode-class in body to use toggleTheme component.
+		$this->dom->body->setAttribute( 'data-prefers-dark-mode-class', $toggle_class );
 
-		AMP_DOM_Utils::add_amp_action( $button, 'tap', "AMP.setState({{$state_id}: !{$state_id}})" );
-		AMP_DOM_Utils::add_amp_action( $button, 'tap', "{$body_id}.toggleClass(class='{$toggle_class}')" );
-		AMP_DOM_Utils::add_amp_action( $button, 'tap', "{$document_id}.toggleClass(class='{$toggle_class}')" );
-
-		$button->setAttribute( 'data-amp-bind-aria-pressed', "{$state_id} ? 'true' : 'false'" );
+		AMP_DOM_Utils::add_amp_action( $button, 'tap', 'AMP.toggleTheme()' );
 	}
 
 	/**

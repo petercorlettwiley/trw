@@ -17,7 +17,6 @@ require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader-skin.php';
  * @since 4.0.0
  */
 class PluginUpgraderSkin extends \WP_Upgrader_Skin {
-
 	/**
 	 * Empty out the header of its HTML content and only check to see if it has
 	 * been performed or not.
@@ -39,9 +38,8 @@ class PluginUpgraderSkin extends \WP_Upgrader_Skin {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param array $errors Array of errors with the install process.
-	 *
-	 * @return array
+	 * @param  array $errors Array of errors with the install process.
+	 * @return void
 	 */
 	public function error( $errors ) {
 		if ( ! empty( $errors ) ) {
@@ -56,5 +54,5 @@ class PluginUpgraderSkin extends \WP_Upgrader_Skin {
 	 *
 	 * @param string $type Type of update count to decrement.
 	 */
-	public function decrement_update_count( $type ) {} // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	public function decrement_update_count( $type ) {} // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable, PSR1.Methods.CamelCapsMethodName.NotCamelCaps
 }

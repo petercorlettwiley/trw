@@ -45,7 +45,6 @@ class Filters extends CommonMain\Filters {
 	public function pluginActionLinks( $actions, $pluginFile ) {
 		$actionLinks = [
 			'settings'   => [
-				// Translators: This is an action link users can click to open the General Settings menu.
 				'label' => __( 'SEO Settings', 'all-in-one-seo-pack' ),
 				'url'   => get_admin_url( null, 'admin.php?page=aioseo-settings' ),
 			],
@@ -62,7 +61,7 @@ class Filters extends CommonMain\Filters {
 			'proupgrade' => [
 				// Translators: This is an action link users can click to purchase a license for All in One SEO Pro.
 				'label' => __( 'Upgrade to Pro', 'all-in-one-seo-pack' ),
-				'url'   => apply_filters( 'aioseo_upgrade_link', aioseo()->helpers->utmUrl( AIOSEO_MARKETING_URL . 'lite-upgrade/', 'plugin-action-links', 'Upgrade' ) ),
+				'url'   => apply_filters( 'aioseo_upgrade_link', aioseo()->helpers->utmUrl( AIOSEO_MARKETING_URL . 'lite-upgrade/', 'plugin-action-links', 'Upgrade', false ) ),
 			]
 		];
 

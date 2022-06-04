@@ -14,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 4.0.0
  */
 class RobotsTxt {
-
 	/**
 	 * Class constructor.
 	 *
@@ -53,6 +52,7 @@ class RobotsTxt {
 
 			array_push( $newRules, wp_json_encode( $newRule ) );
 		}
+
 		return $newRules;
 	}
 }

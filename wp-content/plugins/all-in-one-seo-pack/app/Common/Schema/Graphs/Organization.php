@@ -12,7 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 4.0.0
  */
 class Organization extends Graph {
-
 	/**
 	 * Returns the graph data.
 	 *
@@ -31,7 +30,7 @@ class Organization extends Graph {
 		];
 
 		$logo = $this->logo();
-		if ( $logo ) {
+		if ( ! empty( $logo ) ) {
 			$data['logo']  = $logo;
 			$data['image'] = [ '@id' => $homeUrl . '#organizationLogo' ];
 		}
@@ -55,6 +54,7 @@ class Organization extends Graph {
 				];
 			}
 		}
+
 		return $data;
 	}
 
@@ -75,5 +75,7 @@ class Organization extends Graph {
 		if ( $imageId ) {
 			return $this->image( $imageId, 'organizationLogo' );
 		}
+
+		return [];
 	}
 }

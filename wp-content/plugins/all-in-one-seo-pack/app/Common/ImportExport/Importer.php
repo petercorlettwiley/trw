@@ -12,7 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 4.0.0
  */
 abstract class Importer {
-
 	/**
 	 * Starts the import.
 	 *
@@ -26,6 +25,7 @@ abstract class Importer {
 			$this->importSettings();
 			$this->importPostMeta();
 			$this->importTermMeta();
+
 			return;
 		}
 

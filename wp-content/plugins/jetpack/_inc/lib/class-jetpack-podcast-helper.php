@@ -2,7 +2,7 @@
 /**
  * Helper to massage Podcast data to be used in the Podcast block.
  *
- * @package jetpack
+ * @package automattic/jetpack
  */
 
 /**
@@ -23,6 +23,23 @@ class Jetpack_Podcast_Helper {
 	 */
 	public function __construct( $feed ) {
 		$this->feed = esc_url_raw( $feed );
+	}
+
+	/**
+	 * Retrieves tracks quantity.
+	 *
+	 * @returns int number of tracks
+	 */
+	public static function get_tracks_quantity() {
+		/**
+		 * Allow requesting a specific number of tracks from SimplePie's `get_items` call.
+		 * The default number of tracks is ten.
+		 *
+		 * @since 10.4.0
+		 *
+		 * @param int $number Number of tracks fetched. Default is 10.
+		 */
+		return (int) apply_filters( 'jetpack_podcast_helper_tracks_quantity', 10 );
 	}
 
 	/**
@@ -76,6 +93,9 @@ class Jetpack_Podcast_Helper {
 			$title = $rss->get_title();
 			$title = $this->get_plain_text( $title );
 
+			$description = $rss->get_description();
+			$description = $this->get_plain_text( $description );
+
 			$cover = $rss->get_image_url();
 			$cover = ! empty( $cover ) ? esc_url( $cover ) : null;
 
@@ -83,10 +103,11 @@ class Jetpack_Podcast_Helper {
 			$link = ! empty( $link ) ? esc_url( $link ) : null;
 
 			$player_data = array(
-				'title'  => $title,
-				'link'   => $link,
-				'cover'  => $cover,
-				'tracks' => $tracks,
+				'title'       => $title,
+				'description' => $description,
+				'link'        => $link,
+				'cover'       => $cover,
+				'tracks'      => $tracks,
 			);
 
 			if ( $episode_options ) {
@@ -170,8 +191,23 @@ class Jetpack_Podcast_Helper {
 			return $rss;
 		}
 
-		// Get first ten items and format them.
-		$track_list = array_map( array( __CLASS__, 'setup_tracks_callback' ), $rss->get_items( 0, 10 ) );
+		$tracks_quantity = $this->get_tracks_quantity();
+
+		/**
+		 * Allow requesting a specific number of tracks from SimplePie's `get_items` call.
+		 * The default number of tracks is ten.
+		 * Deprecated. Use jetpack_podcast_helper_tracks_quantity filter instead, which takes one less parameter.
+		 *
+		 * @since 9.5.0
+		 * @deprecated 10.4.0
+		 *
+		 * @param int    $tracks_quantity Number of tracks fetched. Default is 10.
+		 * @param object $rss             The SimplePie object built from core's `fetch_feed` call.
+		 */
+		$tracks_quantity = apply_filters_deprecated( 'jetpack_podcast_helper_list_quantity', array( $tracks_quantity, $rss ), '10.4.0', 'jetpack_podcast_helper_tracks_quantity' );
+
+		// Process the requested number of items from our feed.
+		$track_list = array_map( array( __CLASS__, 'setup_tracks_callback' ), $rss->get_items( 0, $tracks_quantity ) );
 
 		// Filter out any tracks that are empty.
 		// Reset the array indicies.
@@ -314,6 +350,7 @@ class Jetpack_Podcast_Helper {
 			return array();
 		}
 
+		$publish_date = $episode->get_gmdate( DATE_ATOM );
 		// Build track data.
 		$track = array(
 			'id'               => wp_unique_id( 'podcast-track-' ),
@@ -325,6 +362,7 @@ class Jetpack_Podcast_Helper {
 			'title'            => $this->get_plain_text( $episode->get_title() ),
 			'image'            => esc_url( $this->get_episode_image_url( $episode ) ),
 			'guid'             => $this->get_plain_text( $episode->get_id() ),
+			'publish_date'     => $publish_date ? $publish_date : null,
 		);
 
 		if ( empty( $track['title'] ) ) {
@@ -457,6 +495,11 @@ class Jetpack_Podcast_Helper {
 					'title'            => array(
 						'description' => __( 'The episode title.', 'jetpack' ),
 						'type'        => 'string',
+					),
+					'publish_date'     => array(
+						'description' => __( 'The UTC publish date and time of the episode', 'jetpack' ),
+						'type'        => 'string',
+						'format'      => 'date-time',
 					),
 				),
 			),

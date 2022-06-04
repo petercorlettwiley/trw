@@ -14,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 4.0.0
  */
 class PersonAuthor extends Person {
-
 	/**
 	 * Returns the graph data.
 	 *
@@ -61,6 +60,7 @@ class PersonAuthor extends Person {
 				'#id' => aioseo()->schema->context['url'] . '#profilepage'
 			];
 		}
+
 		return $data;
 	}
 }

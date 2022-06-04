@@ -12,7 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 4.0.0
  */
 class Breadcrumb {
-
 	/**
 	 * Returns the breadcrumb trail for the homepage.
 	 *
@@ -37,6 +36,7 @@ class Breadcrumb {
 		if ( is_post_type_hierarchical( $post->post_type ) ) {
 			return $this->setPositions( $this->postHierarchical( $post ) );
 		}
+
 		return $this->setPositions( $this->postNonHierarchical( $post ) );
 	}
 
@@ -57,7 +57,7 @@ class Breadcrumb {
 					'name'        => $post->post_title,
 					'description' => aioseo()->meta->description->getDescription( $post ),
 					'url'         => get_permalink( $post ),
-					'type'        => aioseo()->helpers->isWooCommerceShopPage() || is_home() ? 'CollectionPage' : $this->getPostGraph()
+					'type'        => aioseo()->helpers->isWooCommerceShopPage( $post->ID ) || is_home() ? 'CollectionPage' : $this->getPostGraph()
 				]
 			);
 
@@ -67,6 +67,7 @@ class Breadcrumb {
 				$post = false;
 			}
 		} while ( $post );
+
 		return $breadcrumbs;
 	}
 
@@ -104,8 +105,10 @@ class Breadcrumb {
 		$dateName    = null;
 		$timestamp   = strtotime( $post->post_date_gmt );
 		foreach ( $pairs as $tag => $object ) {
+			// Escape the delimiter.
+			$escObject = aioseo()->helpers->escapeRegex( $object );
 			// Determine the slug for the object.
-			preg_match( "#.*${object}[/]#", $permalink, $url );
+			preg_match( "/.*{$escObject}[\/]/", $permalink, $url );
 			if ( empty( $url[0] ) ) {
 				continue;
 			}
@@ -135,7 +138,7 @@ class Breadcrumb {
 				case '%author%':
 					$breadcrumb = [
 						'name'        => get_the_author_meta( 'display_name', $post->post_author ),
-						'description' => aioseo()->meta->description->prepareDescription( aioseo()->options->searchAppearance->archives->author->metaDescription ),
+						'description' => aioseo()->meta->description->helpers->prepare( aioseo()->options->searchAppearance->archives->author->metaDescription ),
 						'url'         => $url[0],
 						'type'        => 'ProfilePage'
 					];
@@ -161,7 +164,7 @@ class Breadcrumb {
 					}
 					$breadcrumb = [
 						'name'        => $dateName,
-						'description' => aioseo()->meta->description->prepareDescription( aioseo()->options->searchAppearance->archives->date->metaDescription ),
+						'description' => aioseo()->meta->description->helpers->prepare( aioseo()->options->searchAppearance->archives->date->metaDescription ),
 						'url'         => $url[0],
 						'type'        => 'CollectionPage'
 					];
@@ -175,6 +178,7 @@ class Breadcrumb {
 				array_unshift( $breadcrumbs, $breadcrumb );
 			}
 		}
+
 		return $breadcrumbs;
 	}
 
@@ -205,6 +209,7 @@ class Breadcrumb {
 				$term = false;
 			}
 		} while ( $term );
+
 		return $this->setPositions( $breadcrumbs );
 	}
 
@@ -272,6 +277,7 @@ class Breadcrumb {
 			) ),
 			'type'        => 'CollectionPage'
 		];
+
 		return $this->setPositions( $breadcrumbs );
 	}
 
@@ -308,6 +314,7 @@ class Breadcrumb {
 		foreach ( $breadcrumbs as $index => &$breadcrumb ) {
 			$breadcrumb['position'] = $index + 1;
 		}
+
 		return $breadcrumbs;
 	}
 
@@ -324,6 +331,7 @@ class Breadcrumb {
 			$graph     = array_values( array_diff( $graph, [ 'WebPage' ] ) );
 			$graph = 1 === count( $graph ) ? $graph[0] : 'WebPage';
 		}
+
 		return $graph;
 	}
 }

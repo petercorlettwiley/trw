@@ -52,28 +52,31 @@ class Meta {
 	 * @return void
 	 */
 	public function migratePostMeta() {
-		if ( aioseo()->transients->get( 'v3_migration_in_progress_settings' ) ) {
-			aioseo()->helpers->scheduleSingleAction( 'aioseo_migrate_post_meta', 30 );
+		if ( aioseo()->core->cache->get( 'v3_migration_in_progress_settings' ) ) {
+			aioseo()->helpers->scheduleSingleAction( 'aioseo_migrate_post_meta', 30, [], true );
+
 			return;
 		}
 
 		$postsPerAction  = 50;
 		$publicPostTypes = implode( "', '", aioseo()->helpers->getPublicPostTypes( true ) );
-		$timeStarted     = gmdate( 'Y-m-d H:i:s', aioseo()->transients->get( 'v3_migration_in_progress_posts' ) );
+		$timeStarted     = gmdate( 'Y-m-d H:i:s', aioseo()->core->cache->get( 'v3_migration_in_progress_posts' ) );
 
-		$postsToMigrate = aioseo()->db
+		$postsToMigrate = aioseo()->core->db
 			->start( 'posts' . ' as p' )
 			->select( 'p.ID' )
 			->leftJoin( 'aioseo_posts as ap', '`p`.`ID` = `ap`.`post_id`' )
 			->whereRaw( "( ap.post_id IS NULL OR ap.updated < '$timeStarted' )" )
 			->whereRaw( "( p.post_type IN ( '$publicPostTypes' ) )" )
+			->whereRaw( 'p.post_status NOT IN( \'auto-draft\' )' )
 			->orderBy( 'p.ID DESC' )
 			->limit( $postsPerAction )
 			->run()
 			->result();
 
 		if ( ! $postsToMigrate || ! count( $postsToMigrate ) ) {
-			aioseo()->transients->delete( 'v3_migration_in_progress_posts' );
+			aioseo()->core->cache->delete( 'v3_migration_in_progress_posts' );
+
 			return;
 		}
 
@@ -84,6 +87,7 @@ class Meta {
 			$aioseoPost->set( $newPostMeta );
 			$aioseoPost->save();
 
+			$this->updateLocalizedPostMeta( $post->ID, $newPostMeta );
 			$this->migrateAdditionalPostMeta( $post->ID );
 		}
 
@@ -94,7 +98,7 @@ class Meta {
 				// Do nothing.
 			}
 		} else {
-			aioseo()->transients->delete( 'v3_migration_in_progress_posts' );
+			aioseo()->core->cache->delete( 'v3_migration_in_progress_posts' );
 		}
 	}
 
@@ -119,7 +123,7 @@ class Meta {
 			return [];
 		}
 
-		$postMeta = aioseo()->db
+		$postMeta = aioseo()->core->db
 			->start( 'postmeta' . ' as pm' )
 			->select( 'pm.meta_key, pm.meta_value' )
 			->where( 'pm.post_id', $postId )
@@ -206,6 +210,7 @@ class Meta {
 					break;
 			}
 		}
+
 		return $meta;
 	}
 
@@ -284,6 +289,41 @@ class Meta {
 	}
 
 	/**
+	 * Updates the traditional post meta table with the new data.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param  int   $postId  The post ID.
+	 * @param  array $newMeta The new meta data.
+	 * @return void
+	 */
+	protected function updateLocalizedPostMeta( $postId, $newMeta ) {
+		$localizedFields = [
+			'title',
+			'description',
+			'keywords',
+			'og_title',
+			'og_description',
+			'og_article_section',
+			'og_article_tags',
+			'twitter_title',
+			'twitter_description'
+		];
+
+		foreach ( $newMeta as $k => $v ) {
+			if ( ! in_array( $k, $localizedFields, true ) ) {
+				continue;
+			}
+
+			if ( in_array( $k, [ 'keywords', 'og_article_tags' ], true ) ) {
+				$v = ! empty( $v ) ? aioseo()->helpers->jsonTagsToCommaSeparatedList( $v ) : '';
+			}
+
+			update_post_meta( $postId, "_aioseo_{$k}", $v );
+		}
+	}
+
+	/**
 	 * Migrates additional post meta data.
 	 *
 	 * @since 4.0.2
@@ -291,8 +331,23 @@ class Meta {
 	 * @param  int  $postId The post ID.
 	 * @return void
 	 */
-	protected function migrateAdditionalPostMeta( $postId ) {
-		return $postId;
+	public function migrateAdditionalPostMeta( $postId ) {
+		static $disabled = null;
+
+		if ( null === $disabled ) {
+			$disabled = (
+				! aioseo()->options->sitemap->general->enable ||
+				(
+					aioseo()->options->sitemap->general->advancedSettings->enable &&
+					aioseo()->options->sitemap->general->advancedSettings->excludeImages
+				)
+			);
+		}
+		if ( $disabled ) {
+			return;
+		}
+
+		aioseo()->sitemap->image->scanPost( $postId );
 	}
 
 	/**
@@ -304,7 +359,7 @@ class Meta {
 	 * @return array $meta   The mapped meta.
 	 */
 	public function convertOpenGraphMeta( $ogMeta ) {
-		$ogMeta = maybe_unserialize( $ogMeta );
+		$ogMeta = aioseo()->helpers->maybeUnserialize( $ogMeta );
 
 		if ( ! is_array( $ogMeta ) ) {
 			return [];
@@ -400,6 +455,7 @@ class Meta {
 		$titleFormat = isset( $oldOptions[ "aiosp_${postType}_title_format" ] ) ? $oldOptions[ "aiosp_${postType}_title_format" ] : '';
 
 		$seoTitle = aioseo()->helpers->pregReplace( '/(%post_title%|%page_title%)/', $seoTitle, $titleFormat );
+
 		return aioseo()->helpers->sanitizeOption( aioseo()->migration->helpers->macrosToSmartTags( $seoTitle ) );
 	}
 }

@@ -14,7 +14,6 @@ use AIOSEO\Plugin\Common\Models;
  * @since 4.0.0
  */
 class Meta {
-
 	/**
 	 * Class constructor.
 	 *
@@ -27,6 +26,7 @@ class Meta {
 		$this->keywords     = new Keywords();
 		$this->amp          = new Amp();
 		$this->links        = new Links();
+		$this->robots       = new Robots();
 
 		add_action( 'delete_post', [ $this, 'deletePostMeta' ], 1000, 2 );
 	}

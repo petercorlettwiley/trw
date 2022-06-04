@@ -23,6 +23,11 @@ if ( class_exists( 'ActionScheduler_QueueRunner' ) ) {
 	ActionScheduler_QueueRunner::instance()->unhook_dispatch_async_request();
 }
 
+// Remove all AIOSEO grouped actions.
+if ( class_exists( 'ActionScheduler_DBStore' ) ) {
+	ActionScheduler_DBStore::instance()->cancel_actions_by_group( 'aioseo' );
+}
+
 // Confirm user has decided to remove all data, otherwise stop.
 if ( ! aioseo()->options->advanced->uninstall ) {
 	return;
@@ -30,14 +35,27 @@ if ( ! aioseo()->options->advanced->uninstall ) {
 
 global $wpdb;
 
-// Delete notifications table.
-$wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . 'aioseo_notifications' );
+$tablesToDrop = [
+	'aioseo_notifications',
+	'aioseo_posts',
+	'aioseo_terms',
+	'aioseo_redirects',
+	'aioseo_redirects_404_logs',
+	'aioseo_redirects_hits',
+	'aioseo_redirects_logs',
+	'aioseo_cache',
+	'aioseo_links',
+	'aioseo_links_suggestions'
+];
 
-// Delete posts table.
-$wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . 'aioseo_posts' );
+// Delete all our custom tables.
+foreach ( $tablesToDrop as $tableName ) {
+	$wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . $tableName ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+}
 
-// Delete temrs table.
-$wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . 'aioseo_terms' );
+// Delete all AIOSEO Locations and Location Categories.
+$wpdb->query( "DELETE FROM {$wpdb->posts} WHERE post_type = 'aioseo-location'" );
+$wpdb->query( "DELETE FROM {$wpdb->term_taxonomy} WHERE taxonomy = 'aioseo-location-category'" );
 
 // Delete all the plugin settings.
 $wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'aioseo\_%'" );

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita5b38ab4921a8762ad61d1c326e29590
+class ComposerStaticInitdf99070effd108057e623d70f2802377
 {
     public static $prefixLengthsPsr4 = array (
         'P' => 
@@ -33,6 +33,16 @@ class ComposerStaticInita5b38ab4921a8762ad61d1c326e29590
         'AIOSEO\\Plugin\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
+        ),
+    );
+
+    public static $prefixesPsr0 = array (
+        'P' => 
+        array (
+            'PHPInsight' => 
+            array (
+                0 => __DIR__ . '/..' . '/jwhennessey/phpinsight/lib',
+            ),
         ),
     );
 
@@ -151,9 +161,10 @@ class ComposerStaticInita5b38ab4921a8762ad61d1c326e29590
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInita5b38ab4921a8762ad61d1c326e29590::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInita5b38ab4921a8762ad61d1c326e29590::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInita5b38ab4921a8762ad61d1c326e29590::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitdf99070effd108057e623d70f2802377::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitdf99070effd108057e623d70f2802377::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitdf99070effd108057e623d70f2802377::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitdf99070effd108057e623d70f2802377::$classMap;
 
         }, null, ClassLoader::class);
     }

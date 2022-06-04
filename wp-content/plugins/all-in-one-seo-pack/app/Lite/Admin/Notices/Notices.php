@@ -63,6 +63,7 @@ class Notices extends CommonNotices\Notices {
 			if ( $notification->exists() ) {
 				Models\Notification::deleteNotificationByName( 'woo-upsell' );
 			}
+
 			return;
 		}
 
@@ -81,7 +82,7 @@ class Notices extends CommonNotices\Notices {
 			'level'             => [ 'all' ],
 			// Translators: 1 - "Pro".
 			'button1_label'     => sprintf( __( 'Upgrade to %1$s', 'all-in-one-seo-pack' ), 'Pro' ),
-			'button1_action'    => html_entity_decode( apply_filters( 'aioseo_upgrade_link', aioseo()->helpers->utmUrl( AIOSEO_MARKETING_URL . 'lite-upgrade/', 'woo-notification-upsell' ) ) ),
+			'button1_action'    => html_entity_decode( apply_filters( 'aioseo_upgrade_link', aioseo()->helpers->utmUrl( AIOSEO_MARKETING_URL . 'lite-upgrade/', 'woo-notification-upsell', false ) ) ),
 			'start'             => gmdate( 'Y-m-d H:i:s' )
 		] );
 	}
